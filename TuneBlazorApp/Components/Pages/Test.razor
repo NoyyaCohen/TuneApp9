@@ -1,0 +1,34 @@
+﻿@page "/test"
+@using DBL
+@using Models
+
+
+sss
+@if (s != null)
+{
+    @for (int i = 0; i < s.Count; i++)
+    {
+        @s[i].SongName
+        <br />
+    }
+}
+
+
+
+<button @onclick="DoLogin" class="submit-button">LOG IN</button>
+ 
+
+
+
+@code {
+
+
+    List<Song> s;
+    async Task DoLogin()
+    {
+        SongDB songDB = new SongDB();
+        s = await songDB.GetSongByGenre(1);
+
+    }
+
+}

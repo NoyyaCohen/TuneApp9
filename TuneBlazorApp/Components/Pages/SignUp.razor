@@ -1,0 +1,184 @@
+﻿@page "/SignUp"
+@using System.Text.RegularExpressions
+@using DBL
+@using Models
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+<div class="page-wrapper">
+    <!-- Enhanced Decorative Side (visible on desktop) -->
+    <div class="decorative-side">
+        <div class="fire-backdrop"></div>
+        <div class="fire-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+
+        <div class="brand-showcase">
+            <div class="brand-logo-large">TuneApp</div>
+            <div class="brand-tagline">Where Music Comes to Life</div>
+
+            <div class="brand-features">
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-text">Discover thousands of artists</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-text">Create unlimited playlists</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-text">Connect with other music lovers</div>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">✓</div>
+                    <div class="feature-text">Launch your artistic career</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-side">
+        <div class="fire-corner"></div>
+        <div class="ambient-light"></div>
+
+        <div class="signup-form-container">
+            <div class="app-branding">
+                <div class="app-logo">SignUp</div>
+                <div class="app-tagline">Ignite Your Music Journey</div>
+            </div>
+
+            <div class="form-header">
+                <h1 class="form-title">Create Account</h1>
+                <p class="form-subtitle">Join our community of music enthusiasts and start your journey today</p>
+            </div>
+
+
+            <div class="form-group">
+                <label class="form-label" for="fullName">Full Name</label>
+                <input @bind-value="fullName" class="form-input" type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="userName">Username</label>
+                <input @bind-value="userName" class="form-input" type="text" id="userName" name="userName" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="email">Email Address</label>
+                <input @bind-value="emailAddress" class="form-input" type="email" id="email" name="emailAddress" placeholder="Enter your email" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input @bind-value="password" class="form-input" type="password" id="password" name="passwordHash" placeholder="Create a password" required>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label" for="confirmPassword">Confirm Password</label>
+                <input @bind-value="passwordConfirmation" class="form-input" type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            </div>
+
+            <button @onclick="DoSignUp" class="submit-button">CREATE ACCOUNT</button>
+
+            <div class="login-link">
+                Already have an account? <a href="#">Log In</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+@code {
+    // These values are binded to html inputs
+    private string fullName = "";
+    private string userName = "";
+    private string emailAddress = "";
+    private string password = "";
+    private string passwordConfirmation = "";
+
+    ListenerDB listenerDB = new ListenerDB();
+
+    private Dictionary<string, string> validationErrors = new();
+
+
+    public bool ValidateEmail(string email)
+    {
+        var emailPattern = new Regex(@"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
+        var match = emailPattern.Match(email);
+
+        return match.Success;
+    }
+
+
+    private async Task<bool> ValidateCredentials()
+    {
+        validationErrors.Clear();
+
+        if (string.IsNullOrWhiteSpace(fullName))
+            validationErrors.Add("fullName", "Full name is required");
+
+        if (string.IsNullOrWhiteSpace(userName))
+            validationErrors.Add("userName", "User name is required");
+        else
+        {
+            // Check if username already exists
+            var usernameExists = await listenerDB.DoesUsernameExist(userName);
+            if (usernameExists)
+                validationErrors.Add("userName", "This username is already taken");
+        }
+
+        if (!ValidateEmail(emailAddress))
+            validationErrors.Add("emailAddress", "Please enter a valid email address");
+        else
+        {
+            // Check if email already exists
+            var emailExists = await listenerDB.DoesEmailExist(emailAddress);
+            if (emailExists)
+                validationErrors.Add("emailAddress", "This email is already registered");
+        }
+
+        if (string.IsNullOrWhiteSpace(password))
+            validationErrors.Add("password", "Password is required");
+        else if (password.Length < 6)
+            validationErrors.Add("password", "Password must be at least 6 characters");
+        if (password != passwordConfirmation)
+            validationErrors.Add("passwordConfirmation", "Passwords must match");
+
+        return validationErrors.Count == 0;
+    }
+
+    async Task DoSignUp()
+    {
+        ListenerDB listenerDB = new ListenerDB();
+        Listener listener = new Listener();
+        listener.FullName = fullName;
+        listener.UserName = userName;
+        listener.EmailAddress = emailAddress;
+
+
+        bool isValid = await ValidateCredentials();
+        if (isValid)
+        {
+            listenerDB.InsertGetObjAsync(listener, password);
+            await MySession.SetAsync("LisenerSignUp", listener);
+            navigationManager.NavigateTo("Prime");
+        }
+       
+        else
+            {
+                string errorMessages = string.Join("\n", validationErrors.Values);
+                await js.InvokeVoidAsync("alert", errorMessages);
+                // Don't clear all fields - let the user correct only the problematic ones
+            }
+        }
+
+
+    }
+
+}

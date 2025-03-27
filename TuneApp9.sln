@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csproj", "{71F1D5A9-95DF-4029-8443-FEB9ECF4D239}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBL", "DBL\DBL.csproj", "{36F15BE4-ADB7-4089-AA69-1AD57C4FDB01}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TuneBlazorApp", "TuneBlazorApp\TuneBlazorApp.csproj", "{E886B0C0-68C4-419D-B070-15CB4969816E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71F1D5A9-95DF-4029-8443-FEB9ECF4D239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71F1D5A9-95DF-4029-8443-FEB9ECF4D239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71F1D5A9-95DF-4029-8443-FEB9ECF4D239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71F1D5A9-95DF-4029-8443-FEB9ECF4D239}.Release|Any CPU.Build.0 = Release|Any CPU
+		{36F15BE4-ADB7-4089-AA69-1AD57C4FDB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{36F15BE4-ADB7-4089-AA69-1AD57C4FDB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{36F15BE4-ADB7-4089-AA69-1AD57C4FDB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{36F15BE4-ADB7-4089-AA69-1AD57C4FDB01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E886B0C0-68C4-419D-B070-15CB4969816E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E886B0C0-68C4-419D-B070-15CB4969816E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E886B0C0-68C4-419D-B070-15CB4969816E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E886B0C0-68C4-419D-B070-15CB4969816E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E926E1B2-1F49-4584-A132-65E81A7EE528}
+	EndGlobalSection
+EndGlobal

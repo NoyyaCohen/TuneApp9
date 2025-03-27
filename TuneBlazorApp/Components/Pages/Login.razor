@@ -1,0 +1,128 @@
+﻿@page "/Login"
+@using DBL
+@using Models
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+
+
+ <div class="page-wrapper">
+        <!-- Enhanced Decorative Side (visible on desktop) -->
+        <div class="decorative-side">
+            <div class="fire-backdrop"></div>
+            <div class="fire-circles">
+                <div class="circle circle-1"></div>
+                <div class="circle circle-2"></div>
+                <div class="circle circle-3"></div>
+            </div>
+            
+            <div class="brand-showcase">
+                <div class="brand-logo-large">TuneApp</div>
+                <div class="brand-tagline">Where Music Comes to Life</div>
+                
+                <div class="brand-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Discover thousands of artists</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Create unlimited playlists</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Connect with other music lovers</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">✓</div>
+                        <div class="feature-text">Launch your artistic career</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Enhanced Form Side -->
+        <div class="form-side">
+            <div class="fire-corner"></div>
+            <div class="ambient-light"></div>
+            
+            <div class="login-form-container">
+                <div class="app-branding">
+                <div class="app-logo">LogIn</div>
+                    <div class="app-tagline">Ignite Your Music Journey</div>
+                </div>
+                
+                <div class="form-header">
+                    <h1 class="form-title">Welcome Back</h1>
+                    <p class="form-subtitle">Sign in to continue your musical experience</p>
+                </div>
+                
+                
+                    <div class="form-group">
+                        <label class="form-label" for="userName">Username</label>
+                        <input @bind-value="userName" class="form-input" type="text" id="userName" name="userName" placeholder="Enter your username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input @bind-value="passwordHash" class="form-input" type="password" id="password" name="passwordHash" placeholder="Enter your password" required>
+                    </div>
+                    
+                   @*  <div class="remember-me">
+                        <input type="checkbox" id="remember" name="remember">
+                        <label for="remember">Remember me</label>
+                    </div> *@
+                    
+                    <div class="forgot-password">
+                        <a href="#">Forgot password?</a>
+                    </div>
+                    
+                    <button @onclick="DoLogin" class="submit-button">LOG IN</button>
+                    
+                    <div class="signup-link">
+                        Don't have an account? <a href="/SignUp">Sign Up</a>
+                    </div>
+                
+            </div>
+        </div>
+ </div>
+ 
+
+@code {
+
+
+    private string userName = "";
+    private string passwordHash = "";
+    private string msg = "";
+    async Task DoLogin()
+    {
+
+        ListenerDB listenerDB = new ListenerDB();
+        Listener l = await listenerDB.LoginAsync(userName, passwordHash);
+        
+        if (l != null)
+        {
+            Console.WriteLine("Logged in successfully");
+            ArtistDB artistDB = new ArtistDB();
+            Artist a = await artistDB.GetArtistByID(l.UserID);
+            if(a != null)
+            {
+                Console.WriteLine("got id: "+ a);
+                await MySession.SetAsync("ArtistLogin", a);
+            }
+            await MySession.SetAsync("ListenerLogin", l);
+            navigationManager.NavigateTo("/Prime");
+        }
+        else
+        {
+            msg = "the password or username you entered is incorrected";
+            // await js.InvokeVoidAsync("alert", $"The Name or password you entered does not match!");
+            userName = "";
+            passwordHash = "";
+        }
+        
+    }
+        
+    
+}
