@@ -27,7 +27,7 @@ namespace Models
         }
 
         public int ArtistID { get => artistID; set => artistID = value; }
-        public string StageName { get => StageName; set => StageName = value; }
+        public string StageName { get => stageName; set => stageName = value; }
         public int FollowersNumber { get => followersNumber; set => followersNumber = value; }
         public int GenreID { get => genreID; set => genreID = value; }
         public byte[] ProfileImage { get => profileImage; set => profileImage = value; }

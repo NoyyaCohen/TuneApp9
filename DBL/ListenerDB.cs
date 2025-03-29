@@ -26,6 +26,7 @@ namespace DBL
             L.FullName = row[1].ToString();
             L.UserName = row[2].ToString();
             L.EmailAddress = row[3].ToString();
+            L.PasswordHash = StringHasher.GetSHA256Hash(row[4].ToString());
             return L;
         }
 
@@ -108,14 +109,14 @@ namespace DBL
         {
             try
             {
-                string sql = "SELECT COUNT(*) FROM tuneapp.users WHERE userName = @username";
+                string sql = "SELECT * FROM tuneapp.users WHERE userName = @username";
                 var parameters = new Dictionary<string, object> { { "username", username } };
 
                 // Add await before your database call
-                int count = Convert.ToInt32(await SelectAllAsync(sql, parameters));
+                var users = await SelectAllAsync(sql, parameters);
 
                 // Return true if count > 0
-                return count > 0;
+                return users.Count > 0;
             }
             catch (Exception ex)
             {
@@ -129,12 +130,12 @@ namespace DBL
         {
             try
             {
-                string sql = "select count(*) as count from tuneapp.users where emailAddress=@email";
+                string sql = "select * from tuneapp.users where emailAddress=@email";
                 var parameters = new Dictionary<string, object> { { "@email", email } };
 
-                int count = Convert.ToInt32(await SelectAllAsync(sql, parameters));
+                var users = await SelectAllAsync(sql, parameters);
 
-                return count > 0;
+                return users.Count > 0;
             }
             catch (Exception ex)
             {
@@ -148,12 +149,12 @@ namespace DBL
         {
             try
             {
-                string sql = "select count(*) as count from tuneapp.users where userName=@userName";
-                var parameters = new Dictionary<string, object> { { "@userName", userName } };
+                string sql = "select * from tuneapp.users where userName=@userName";
+                var parameters = new Dictionary<string, object> { { "userName", userName } };
 
-                int count = Convert.ToInt32(await SelectAllAsync(sql, parameters));
+                var users = await SelectAllAsync(sql, parameters);
 
-                return count > 0;
+                return users.Count > 0;
             }
             catch (Exception ex)
             {

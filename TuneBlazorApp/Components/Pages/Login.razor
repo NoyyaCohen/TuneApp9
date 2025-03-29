@@ -99,7 +99,7 @@
     {
 
         ListenerDB listenerDB = new ListenerDB();
-        Listener l = await listenerDB.LoginAsync(userName, passwordHash);
+        Listener l = await listenerDB.LoginAsync(userName, StringHasher.GetSHA256Hash(passwordHash));
         
         if (l != null)
         {

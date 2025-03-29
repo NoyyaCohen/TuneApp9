@@ -28,13 +28,15 @@ namespace DBL
             A.StageName = row[1].ToString();
             A.FollowersNumber = int.Parse(row[2].ToString());
             A.GenreID = int.Parse(row[3].ToString());
-            if (row[4] != null)
+            // null = invalid memory reference.
+            // DBNull = invalid reference to DB entry. DBNull.Value != null (DBNull.Value isn't an invalid memory reference)
+            if (row[4] != DBNull.Value)
             {
                 A.ProfileImage = (byte[])row[4];
             }
             else
             {
-                A.ProfileImage = new byte[0];
+                A.ProfileImage = Array.Empty<byte>();
             }
 
             return A;
@@ -56,7 +58,7 @@ namespace DBL
         public async Task<Artist> GetArtistByID(int id)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("artistID", id);
+            parameters.Add("artistId", id);
             //parameters["artistID"] = id;
             List<Artist> ArtistDTOs = await base.SelectAllAsync(parameters);
             if (ArtistDTOs != null && ArtistDTOs.Count == 1)

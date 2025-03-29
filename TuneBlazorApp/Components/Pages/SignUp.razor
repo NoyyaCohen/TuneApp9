@@ -95,6 +95,7 @@
 
 
 @code {
+
     // These values are binded to html inputs
     private string fullName = "";
     private string userName = "";
@@ -160,6 +161,7 @@
         listener.FullName = fullName;
         listener.UserName = userName;
         listener.EmailAddress = emailAddress;
+        listener.PasswordHash = StringHasher.GetSHA256Hash(password);
 
 
         bool isValid = await ValidateCredentials();
@@ -169,16 +171,16 @@
             await MySession.SetAsync("LisenerSignUp", listener);
             navigationManager.NavigateTo("Prime");
         }
-       
+
         else
-            {
-                string errorMessages = string.Join("\n", validationErrors.Values);
-                await js.InvokeVoidAsync("alert", errorMessages);
-                // Don't clear all fields - let the user correct only the problematic ones
-            }
+        {
+            string errorMessages = string.Join("\n", validationErrors.Values);
+            await js.InvokeVoidAsync("alert", errorMessages);
+            // Don't clear all fields - let the user correct only the problematic ones
         }
-
-
     }
+
+
+}
 
 }

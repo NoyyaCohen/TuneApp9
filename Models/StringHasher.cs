@@ -11,14 +11,14 @@ namespace Models
     {
         public static string GetSHA256Hash(string plainText)
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
 
-            using (SHA256 hash = SHA256.Create())
+            using (var hash = SHA256.Create())
             {
-                Encoding enc = Encoding.UTF8;
-                byte[] result = hash.ComputeHash(enc.GetBytes(plainText));
+                var enc = Encoding.UTF8;
+                var result = hash.ComputeHash(enc.GetBytes(plainText));
 
-                foreach (byte b in result)
+                foreach (var b in result)
                 {
                     builder.Append(b.ToString("x2"));
                 }
