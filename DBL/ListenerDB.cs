@@ -26,7 +26,7 @@ namespace DBL
             L.FullName = row[1].ToString();
             L.UserName = row[2].ToString();
             L.EmailAddress = row[3].ToString();
-            L.PasswordHash = StringHasher.GetSHA256Hash(row[4].ToString());
+            L.PasswordHash = row[4].ToString();//hash
             return L;
         }
 

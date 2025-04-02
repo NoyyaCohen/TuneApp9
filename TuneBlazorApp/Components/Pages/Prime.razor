@@ -90,14 +90,26 @@
             History
         </a>
     </nav>
+    @if(listener!=null)
+    {
+        <div class="user-profile">
+            <div class="user-avatar">@listener.UserName[0].ToString().ToUpper()</div>
+            <div class="user-info">
 
-    <div class="user-profile">
-        <div class="user-avatar">J</div>
-        <div class="user-info">
-            <div class="user-name">Josh</div>
-            <div class="user-type">Listener</div>
+                @if (!IsArtist)
+                {
+                    <div class="user-name">@listener.UserName</div>
+                    <div class="user-type">Listener</div>
+
+                }
+                else
+                {
+                    <div class="user-name">@listener.UserName</div>
+                    <div class="user-type">Artist</div>
+                }
+            </div>
         </div>
-    </div>
+    }
 </aside>
 
 <!-- Main Content -->
@@ -493,22 +505,31 @@
 
     private Listener listener;
     private Artist artist;
+    private bool IsArtist = false;
+
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var listener1 = await MySession.GetAsync<Artist>("ArtistLogin");
-        var artist1 = await MySession.GetAsync<Artist>("ListenerLogin");
-        if (listener1.Success && artist1.Success)
+        if (firstRender)
         {
-            artist = artist1.Value;
-            StateHasChanged();
+
+            var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+            var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+            if (listener1.Success && artist1.Success)
+            {
+                artist = artist1.Value;
+                artist.UserName = listener1.Value.UserName;
+                listener = listener1.Value;
+                IsArtist = true;
+                StateHasChanged();
+            }
+            else if (listener1.Success)
+            {
+                listener = listener1.Value;
+                StateHasChanged();
+            }
+            else
+                navigationManager.NavigateTo("Login");
         }
-        else if (listener1.Success)
-        {
-            listener = listener1.Value;
-            StateHasChanged();
-        }
-        else
-            navigationManager.NavigateTo("Login");
     }
 
 

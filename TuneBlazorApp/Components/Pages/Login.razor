@@ -99,11 +99,11 @@
     {
 
         ListenerDB listenerDB = new ListenerDB();
-        Listener l = await listenerDB.LoginAsync(userName, StringHasher.GetSHA256Hash(passwordHash));
+        Listener l = await listenerDB.LoginAsync(userName, passwordHash);//
         
         if (l != null)
         {
-            Console.WriteLine("Logged in successfully");
+            Console.WriteLine("Logged in successfully");   
             ArtistDB artistDB = new ArtistDB();
             Artist a = await artistDB.GetArtistByID(l.UserID);
             if(a != null)

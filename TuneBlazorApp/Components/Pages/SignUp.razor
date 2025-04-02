@@ -161,7 +161,7 @@
         listener.FullName = fullName;
         listener.UserName = userName;
         listener.EmailAddress = emailAddress;
-        listener.PasswordHash = StringHasher.GetSHA256Hash(password);
+        listener.PasswordHash = password;//
 
 
         bool isValid = await ValidateCredentials();
