@@ -108,6 +108,7 @@
             Artist a = await artistDB.GetArtistByID(l.UserID);
             if(a != null)
             {
+                a.ProfileImage = null;
                 Console.WriteLine("got id: "+ a);
                 await MySession.SetAsync("ArtistLogin", a);
             }
