@@ -77,8 +77,10 @@
                     <div class="forgot-password">
                         <a href="#">Forgot password?</a>
                     </div>
-                    
-                    <button @onclick="DoLogin" class="submit-button">LOG IN</button>
+
+            <p style="color:orange; ">@msg</p>
+
+                <button @onclick="DoLogin" class="submit-button">LOG IN</button>
                     
                     <div class="signup-link">
                         Don't have an account? <a href="/SignUp">Sign Up</a>
@@ -117,6 +119,7 @@
         }
         else
         {
+
             msg = "the password or username you entered is incorrected";
             // await js.InvokeVoidAsync("alert", $"The Name or password you entered does not match!");
             userName = "";

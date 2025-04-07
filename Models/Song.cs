@@ -12,13 +12,15 @@ namespace Models
         private string songName;
         private byte[] songFile ;
         private int artistID;
+        private int duration;
 
-        public Song(int songID, string songName, byte[] songFile, int artistID)
+        public Song(int songID, string songName, byte[] songFile, int artistID, int duration)
         {
             this.SongID = songID;
             this.SongName = songName;
             this.SongFile = songFile;
-            this.ArtistID = artistID;   
+            this.ArtistID = artistID;
+            this.Duration = duration;
         }
 
         public Song() { }
@@ -27,5 +29,7 @@ namespace Models
         public string SongName { get => songName; set => songName = value; }
         public byte[] SongFile { get => songFile; set => songFile = value; }
         public int ArtistID { get => artistID; set => artistID = value; }
+
+        public int Duration { get => duration; set => duration = value; }
     }
 }

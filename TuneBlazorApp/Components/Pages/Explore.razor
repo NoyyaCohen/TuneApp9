@@ -1,0 +1,219 @@
+﻿@page "/Explore"
+@using DBL
+@using Models
+
+<link href="/Explor.css" rel="stylesheet"/>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music App - Explore</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: #000000;
+            color: #FFFFFF;
+        }
+
+        .explore-page {
+            padding: 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .music-icon {
+            color: #FF4500;
+            margin-right: 15px;
+            font-size: 24px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .artist-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .artist-container {
+            background-color: #1A1A1A;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .artist-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+        }
+
+        .artist-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .artist-image {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 16px;
+            background-color: #333;
+        }
+
+        .artist-name {
+            font-size: 22px;
+            font-weight: 500;
+        }
+
+        .toggle-icon {
+            color: #FFFFFF;
+            font-size: 18px;
+        }
+
+        .songs-list {
+            border-top: 1px solid #222;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+
+        .artist-container.active .songs-list {
+            max-height: 500px;
+        }
+
+        .song-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #222;
+        }
+
+            .song-item:last-child {
+                border-bottom: none;
+            }
+
+        .song-number {
+            width: 40px;
+            color: #888;
+            font-size: 16px;
+        }
+
+        .song-title {
+            flex: 1;
+            font-size: 16px;
+        }
+
+        .song-duration {
+            color: #888;
+            font-size: 16px;
+            width: 50px;
+            text-align: right;
+        }
+
+        /* Down arrow for active, right arrow for inactive */
+        .artist-container .toggle-icon {
+            color: #FFFFFF;
+        }
+
+        .artist-container.active .toggle-icon {
+            color: #FF4500;
+        }
+    </style>
+</head>
+<body>
+    <div class="explore-page">
+    <div class="page-header">
+        <span class="music-icon">♪</span>
+        <h1 class="page-title">Explore</h1>
+    </div>
+</div>
+
+    @foreach(var artist in artists)
+    {
+        <div class="artist-container" id="@artist.StageName.ToLower()">
+            <div class="artist-header" onclick="toggleArtist('@artist.StageName.ToLower()')">
+                <div class="artist-info">
+                    <img class="artist-image" src="website/api/getartistphoto/@artist.StageName" alt="@artist.StageName">
+                    <span class="artist-name">@artist.StageName</span>
+                </div>
+                
+                <div class="toggle-icon">-----></div>
+            </div>
+        
+            <div class="songs-list">
+                @{
+                    var i = 1;
+                    foreach(var song in artistIdToSongsList[artist.ArtistID])
+                    {
+                        <div class="song-item">
+                            <div class="song-number">@i</div>
+                            <div class="song-title">@song.SongName</div>
+                            <div class="song-duration">@song.Duration</div>
+                        </div>
+                        i++;
+                    }
+                }
+            </div>
+        </div>
+    }
+
+    <script>
+        function toggleArtist(id) {
+            const artistElement = document.getElementById(id);
+            const isActive = artistElement.classList.contains('active');
+            const toggleIcon = artistElement.querySelector('.toggle-icon');
+
+            if (isActive) {
+                artistElement.classList.remove('active');
+                toggleIcon.textContent = '▶';
+            } else {
+                artistElement.classList.add('active');
+                toggleIcon.textContent = '▼';
+            }
+        }
+    </script>
+</body>
+</html>
+
+@code
+{
+    private List<Artist> artists = [];
+    private Dictionary<int, List<Song>> artistIdToSongsList = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var artistDB = new ArtistDB();
+            artists = await artistDB.selectAllAsync();
+
+            if (artists.Count == 0)
+            {
+                // Handle bad case
+            }
+
+            foreach (var artist in artists)
+            {
+                var songDB = new SongDB();
+                artistIdToSongsList.Add(artist.ArtistID, await songDB.GetAllSongByArtisIDtAsync(artist.ArtistID));
+            }
+        }
+    }
+}

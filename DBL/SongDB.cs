@@ -124,18 +124,18 @@ namespace DBL
         public async Task<List<Song>> GetAllSongByArtisIDtAsync(int ArtistID)
         {
             string sql = @$"Select
-                                songs.songID,
+                                songs.songId,
                                 songs.songName,
-                                songs.mp3_file,
-                                songs.artistID
+                                songs.songFile,
+                                songs.artistId
                             From
-                                followers Inner Join
-                                songs On songs.artistID = followers.artistID
+                                artists Inner Join
+                                songs On songs.artistId = artists.artistId
                             Where
-                                followers.userID = @artistID";
+                                artists.artistId = @artistID;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("artistID", ArtistID.ToString());
-            List<Song> list = (List<Song>)await SelectAllAsync(sql, p);
+            List<Song> list = await SelectAllAsync(sql, p);
 
             return list;
 
