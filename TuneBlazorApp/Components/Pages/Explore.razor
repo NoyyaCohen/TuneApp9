@@ -145,7 +145,10 @@
     </div>
 </div>
 
-    @foreach(var artist in artists)
+@if (artists!=null && artists.Count!= 0)
+{
+
+    @foreach (var artist in artists)
     {
         <div class="artist-container" id="@artist.StageName.ToLower()">
             <div class="artist-header" onclick="toggleArtist('@artist.StageName.ToLower()')">
@@ -153,14 +156,14 @@
                     <img class="artist-image" src="website/api/getartistphoto/@artist.StageName" alt="@artist.StageName">
                     <span class="artist-name">@artist.StageName</span>
                 </div>
-                
-                <div class="toggle-icon">-----></div>
+
+                    <div class="toggle-icon">▶</div>
             </div>
-        
+
             <div class="songs-list">
                 @{
                     var i = 1;
-                    foreach(var song in artistIdToSongsList[artist.ArtistID])
+                    foreach (var song in artistIdToSongsList[artist.ArtistID])
                     {
                         <div class="song-item">
                             <div class="song-number">@i</div>
@@ -173,8 +176,9 @@
             </div>
         </div>
     }
+}
 
-    <script>
+<script>
         function toggleArtist(id) {
             const artistElement = document.getElementById(id);
             const isActive = artistElement.classList.contains('active');
@@ -194,7 +198,7 @@
 
 @code
 {
-    private List<Artist> artists = [];
+    public List<Artist> artists { get; set; } = null;
     private Dictionary<int, List<Song>> artistIdToSongsList = new();
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -214,6 +218,7 @@
                 var songDB = new SongDB();
                 artistIdToSongsList.Add(artist.ArtistID, await songDB.GetAllSongByArtisIDtAsync(artist.ArtistID));
             }
+            StateHasChanged();
         }
     }
 }
