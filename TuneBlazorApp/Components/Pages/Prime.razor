@@ -9,7 +9,77 @@
 <link href="/Prime.css" rel="stylesheet" />
 
 <script type="text/javascript">
+    var isFirstInit = true;
+
+    function firstInit() { 
+        const audio = document.getElementById("audio-player");
+        const playPauseButton = document.querySelector('.play-pause');
+        const playPauseIcon = playPauseButton.querySelector('path');
+        const progressBar = document.querySelector('.progress-bar');
+        const progressFill = document.querySelector('.progress-fill');
+        const progressHandle = document.querySelector('.progress-handle');
+        const currentTimeDisplay = document.querySelectorAll('.time')[0];
+        const durationDisplay = document.querySelectorAll('.time')[1];
+        const volumeFill = document.querySelector('.volume-fill');
+        const volumeBar = document.querySelector('.volume-bar');
+
+        // const audio = document.getElementById('audio-player');
+        // Play / Pause toggle
+        playPauseButton.addEventListener('click', () => {
+            if (audio.paused) {
+                playSong();
+            } else {
+                audio.pause();
+                playPauseIcon.setAttribute('d', 'M8 5v14l11-7z'); // Play icon
+            }
+        });
+
+        // Update progress bar as audio plays
+        audio.addEventListener('timeupdate', () => {
+            const percent = (audio.currentTime / audio.duration) * 100;
+            progressFill.style.width = percent + '%';
+            progressHandle.style.left = percent + '%';
+            currentTimeDisplay.textContent = formatTime(audio.currentTime);
+        });
+
+        // Show duration when loaded
+        audio.addEventListener('loadedmetadata', () => {
+            durationDisplay.textContent = formatTime(audio.duration);
+        });
+
+        // Click to seek
+        progressBar.addEventListener('click', (e) => {
+            const rect = progressBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percent = clickX / width;
+            audio.currentTime = percent * audio.duration;
+        });
+
+        // Volume control
+        volumeBar.addEventListener('click', (e) => {
+            const rect = volumeBar.getBoundingClientRect();
+            const clickX = e.clientX - rect.left;
+            const width = rect.width;
+            const percent = clickX / width;
+            audio.volume = percent;
+            volumeFill.style.width = percent * 100 + '%';
+        });
+    }
+
+    // Format time in mm:ss
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+
     function changeMusicFile(event) {
+        if (isFirstInit) {
+            firstInit();
+            isFirstInit = false;
+        }
+
         // Get the clicked element (the song-card div)
         const songCard = event.currentTarget;
 
@@ -20,6 +90,32 @@
         const songArtist = songCard.querySelector('.song-artist').textContent;
         document.querySelector('.playing-artist').textContent = songArtist;
 
+        const songArtistId = songCard.querySelector('.song-artist-id').textContent;
+        // document.querySelector('.playing-artist-id').textContent = songArtistId;
+
+        //https://localhost:7012/api/audio/{song-artist-id}/{song-file-name}
+        const songFileName = songCard.querySelector('.song-file-name').textContent;
+        //  document.querySelector('.playing-file-name').textContent = songFileName;
+
+        const newSrc = "/api/audio/" + songArtistId + "/" + songFileName;
+        //לא הוספתי localhost כדי שהלינק לא יהיה מקומי ויהיה אפשר להפעיל אותו מכל מחשב
+
+
+        const audio = document.getElementById("audio-player");
+        audio.src = newSrc; // set new source
+        audio.load();
+        playSong();
+    }
+
+    //ניגש לפקד שך האאודיו ואומר לו לנגן ומשנה את האייקון של הניגון
+    function playSong() {
+
+        const audio = document.getElementById("audio-player");
+        const playPauseButton = document.querySelector('.play-pause');
+        const playPauseIcon = playPauseButton.querySelector('path');
+
+        audio.play();
+        playPauseIcon.setAttribute('d', 'M6 5h4v14H6zm8 0h4v14h-4z'); // Pause icon
     }
 </script>
 
@@ -78,7 +174,7 @@
             </svg>
             Liked Songs
         </a>
-        
+
         @if (IsArtist)
         {
             <a class="nav-item" href="ArtistManager">
@@ -207,6 +303,8 @@
                             <div class="song-info">
                                 <div class="song-title">@song.SongName</div>
                                 <div class="song-artist">@song.ArtistID</div>
+                                <div class="song-artist-id" style="display:none;">@song.ArtistID</div>
+                                <div class="song-file-name" style="display:none;">@song.SongFilePath</div>
                             </div>
                         </div>
                     }
@@ -481,21 +579,21 @@
 
         <div class="player-controls">
             <div class="control-buttons">
-                <button class="control-button">
+                <!--   <button class="control-button">
                     <svg viewBox="0 0 24 24" width="20" height="20">
                         <path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" class="svg-icon"></path>
                     </svg>
-                </button>
+                </button> -->
                 <button class="control-button play-pause">
                     <svg viewBox="0 0 24 24" width="18" height="18">
                         <path d="M8 5v14l11-7z" class="svg-icon"></path>
                     </svg>
                 </button>
-                <button class="control-button">
+                <!--   <button class="control-button">
                     <svg viewBox="0 0 24 24" width="20" height="20">
                         <path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" class="svg-icon"></path>
                     </svg>
-                </button>
+                   </button>-->
             </div>
 
             <div class="progress-container">
@@ -518,6 +616,11 @@
                 </div>
             </div>
         </div>
+
+
+        <audio id="audio-player" style="display:none;">
+            <source src="" type="audio/mpeg">
+        </audio>
     </div>
 </div>
 
