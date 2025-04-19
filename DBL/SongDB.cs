@@ -27,15 +27,16 @@ namespace DBL
             Song S = new Song();
             S.SongID = int.Parse(row[0].ToString());
             S.SongName = row[1].ToString();
-            if (row[2] != null)
-            {
-                S.SongFile = (byte[])row[2];
-            }
-            else
-            {
-                S.SongFile = new byte[0];
-            }
-            S.ArtistID = int.Parse(row[3].ToString());
+            //if (row[2] != null)
+            //{
+            //    S.SongFile = (byte[])row[2];
+            //}
+            //else
+            //{
+            //    S.SongFile = new byte[0];
+            //}
+            S.ArtistID = int.Parse(row[2].ToString());
+            S.SongFilePath = row[3].ToString();
             return S;
         }
 
@@ -75,12 +76,12 @@ namespace DBL
                 return null;
         }
 
-        public async Task<Song> InsertGetObjAsync(Song song, string password)
+        public async Task<Song> InsertGetObjAsync(Song song)
         {
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
                 { "songName", song.SongName },
-                { "songFile", song.SongFile } ,
+                { "songFilePath", song.SongFilePath } ,
                 { "artistID", song.ArtistID }
             };
             return (Song)await base.InsertGetObjAsync(fillValues);
@@ -126,7 +127,6 @@ namespace DBL
             string sql = @$"Select
                                 songs.songId,
                                 songs.songName,
-                                songs.songFile,
                                 songs.artistId
                             From
                                 artists Inner Join

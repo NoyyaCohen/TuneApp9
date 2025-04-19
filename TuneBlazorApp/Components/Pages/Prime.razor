@@ -8,6 +8,21 @@
 
 <link href="/Prime.css" rel="stylesheet" />
 
+<script type="text/javascript">
+    function changeMusicFile(event) {
+        // Get the clicked element (the song-card div)
+        const songCard = event.currentTarget;
+
+        // Find the song-title div within the clicked song-card
+        const songTitle = songCard.querySelector('.song-title').textContent;
+        document.querySelector('.playing-title').textContent = songTitle;
+
+        const songArtist = songCard.querySelector('.song-artist').textContent;
+        document.querySelector('.playing-artist').textContent = songArtist;
+
+    }
+</script>
+
 <!-- SVG Definitions -->
 <svg style="display: none;">
     <defs>
@@ -39,7 +54,7 @@
             </svg>
             Home
         </a>
-        <a class="nav-item">
+        <a class="nav-item" href="Explore">
             <svg class="nav-icon" viewBox="0 0 24 24">
                 <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" class="svg-icon"></path>
             </svg>
@@ -63,6 +78,16 @@
             </svg>
             Liked Songs
         </a>
+        
+        @if (IsArtist)
+        {
+            <a class="nav-item" href="ArtistManager">
+                <svg class="nav-icon" viewBox="0 0 24 24">
+                    <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z" class="svg-icon"></path>
+                </svg>
+                Artist Manager
+            </a>
+        }
 
         <div class="nav-title">Library</div>
         <a class="nav-item">
@@ -90,7 +115,7 @@
             History
         </a>
     </nav>
-    @if(listener!=null)
+    @if (listener != null)
     {
         <div class="user-profile">
             <div class="user-avatar">@listener.UserName[0].ToString().ToUpper()</div>
@@ -135,8 +160,8 @@
 
     <!-- Content -->
     <div class="content">
-        <!-- Hero Section --> 
-        <div class="hero-section">   
+        <!-- Hero Section -->
+        <div class="hero-section">
             <div class="hero-overlay"></div>
             <div class="hero-content">
                 <div class="hero-subtitle">Featured Playlist</div>
@@ -170,98 +195,98 @@
             </div>
 
             <div class="card-grid">
-            @if(songs != null)
-            {
+                @if (songs != null)
+                {
                     foreach (var song in songs)
                     {
-                        <div class="song-card">
+                        <div class="song-card" onclick="changeMusicFile(event)">
                             <div class="song-thumbnail">
                                 <img src="/api/placeholder/300/300" alt="Song Cover">
                                 <div class="song-play">▶</div>
                             </div>
                             <div class="song-info">
-                                <div class="song-title">Burning Hearts</div>
-                                <div class="song-artist">Ember Dreams</div>
+                                <div class="song-title">@song.SongName</div>
+                                <div class="song-artist">@song.ArtistID</div>
                             </div>
                         </div>
                     }
-            }
+                }
             </div>
         </section>
 
-       @*      <div class="card-grid">
-                <!-- Song Card 1 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Burning Hearts</div>
-                        <div class="song-artist">Ember Dreams</div>
-                    </div>
-                </div>
+        @*      <div class="card-grid">
+        <!-- Song Card 1 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Burning Hearts</div>
+        <div class="song-artist">Ember Dreams</div>
+        </div>
+        </div>
 
-                <!-- Song Card 2 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Phoenix Rising</div>
-                        <div class="song-artist">Firebird</div>
-                    </div>
-                </div>
+        <!-- Song Card 2 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Phoenix Rising</div>
+        <div class="song-artist">Firebird</div>
+        </div>
+        </div>
 
-                <!-- Song Card 3 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Eternal Flame</div>
-                        <div class="song-artist">The Embers</div>
-                    </div>
-                </div>
+        <!-- Song Card 3 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Eternal Flame</div>
+        <div class="song-artist">The Embers</div>
+        </div>
+        </div>
 
-                <!-- Song Card 4 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Ignite</div>
-                        <div class="song-artist">Ash & Cinder</div>
-                    </div>
-                </div>
+        <!-- Song Card 4 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Ignite</div>
+        <div class="song-artist">Ash & Cinder</div>
+        </div>
+        </div>
 
-                <!-- Song Card 5 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Blaze of Glory</div>
-                        <div class="song-artist">Fire Walk</div>
-                    </div>
-                </div>
+        <!-- Song Card 5 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Blaze of Glory</div>
+        <div class="song-artist">Fire Walk</div>
+        </div>
+        </div>
 
-                <!-- Song Card 6 -->
-                <div class="song-card">
-                    <div class="song-thumbnail">
-                        <img src="/api/placeholder/300/300" alt="Song Cover">
-                        <div class="song-play">▶</div>
-                    </div>
-                    <div class="song-info">
-                        <div class="song-title">Inferno Dreams</div>
-                        <div class="song-artist">Spark Collective</div>
-                    </div>
-                </div>
-            </div>
+        <!-- Song Card 6 -->
+        <div class="song-card">
+        <div class="song-thumbnail">
+        <img src="/api/placeholder/300/300" alt="Song Cover">
+        <div class="song-play">▶</div>
+        </div>
+        <div class="song-info">
+        <div class="song-title">Inferno Dreams</div>
+        <div class="song-artist">Spark Collective</div>
+        </div>
+        </div>
+        </div>
         </section> *@
 
         <!-- New from Artists You Follow -->
@@ -278,7 +303,7 @@
 
             <div class="card-grid">
                 <!-- Song Card 1 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -290,7 +315,7 @@
                 </div>
 
                 <!-- Song Card 2 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -302,7 +327,7 @@
                 </div>
 
                 <!-- Song Card 3 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -314,7 +339,7 @@
                 </div>
 
                 <!-- Song Card 4 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -326,7 +351,7 @@
                 </div>
 
                 <!-- Song Card 5 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -338,7 +363,7 @@
                 </div>
 
                 <!-- Song Card 6 -->
-                <div class="song-card">
+                <div class="song-card" onclick="changeMusicFile(event)">
                     <div class="song-thumbnail">
                         <img src="/api/placeholder/300/300" alt="Song Cover">
                         <div class="song-play">▶</div>
@@ -498,7 +523,10 @@
 
 @code {
     // private Listener listener = new Listener();
-    private List<Song> songs = new List<Song>();
+    private List<Song> songs = null;
+
+
+    private Song song = new Song();
 
     private string UserName;
     private string Password;
@@ -511,6 +539,8 @@
     {
         if (firstRender)
         {
+            SongDB songDB = new SongDB();
+            songs = await songDB.selectAllAsync();
 
             var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
             var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
@@ -531,7 +561,4 @@
                 navigationManager.NavigateTo("Login");
         }
     }
-
-
-    
 }

@@ -1,6 +1,7 @@
 ﻿@page "/Explore"
 @using DBL
 @using Models
+@using Org.BouncyCastle.Asn1.Tsp
 
 <link href="/Explor.css" rel="stylesheet"/>
 
@@ -153,7 +154,14 @@
         <div class="artist-container" id="@artist.StageName.ToLower()">
             <div class="artist-header" onclick="toggleArtist('@artist.StageName.ToLower()')">
                 <div class="artist-info">
-                    <img class="artist-image" src="website/api/getartistphoto/@artist.StageName" alt="@artist.StageName">
+                    @if (artist.ProfileImage != null)
+                    {
+                        <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String(artist.ProfileImage)" />
+                    }
+                    else
+                    {
+                        <img class="artist-image" src="data:image;base64, @System.Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");" />
+                    }
                     <span class="artist-name">@artist.StageName</span>
                 </div>
 
@@ -168,7 +176,7 @@
                         <div class="song-item">
                             <div class="song-number">@i</div>
                             <div class="song-title">@song.SongName</div>
-                            <div class="song-duration">@song.Duration</div>
+                             <div class="song-duration">@song.SongFilePath</div>
                         </div>
                         i++;
                     }
@@ -200,6 +208,10 @@
 {
     public List<Artist> artists { get; set; } = null;
     private Dictionary<int, List<Song>> artistIdToSongsList = new();
+    private ArtistDB artistDB = new ArtistDB();
+    // private List<byte[]> photo = new List<byte[]>();
+    // private byte[] photo = artistDB.ArtistPhoto();
+
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -207,7 +219,7 @@
         {
             var artistDB = new ArtistDB();
             artists = await artistDB.selectAllAsync();
-
+            var songDB = new SongDB();
             if (artists.Count == 0)
             {
                 // Handle bad case
@@ -215,8 +227,9 @@
 
             foreach (var artist in artists)
             {
-                var songDB = new SongDB();
                 artistIdToSongsList.Add(artist.ArtistID, await songDB.GetAllSongByArtisIDtAsync(artist.ArtistID));
+                // photo.Add(await artistDB.ArtistPhoto(artist.ArtistID));
+                //Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");
             }
             StateHasChanged();
         }
