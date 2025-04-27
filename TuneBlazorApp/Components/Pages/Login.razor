@@ -97,12 +97,13 @@
     private string userName = "";
     private string passwordHash = "";
     private string msg = "";
+
     async Task DoLogin()
     {
 
         ListenerDB listenerDB = new ListenerDB();
         Listener l = await listenerDB.LoginAsync(userName, passwordHash);//
-        
+
         if (l != null)
         {
             Console.WriteLine("Logged in successfully");   
@@ -125,8 +126,16 @@
             userName = "";
             passwordHash = "";
         }
-        
+
     }
-        
-    
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+        var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+        if (listener1.Success || artist1.Success)
+        {
+            navigationManager.NavigateTo("Prime");
+        }
+    }
 }

@@ -1,4 +1,8 @@
 ﻿@page "/"
+@using Models
+@inject NavigationManager navigationManager
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
 
 @* <PageTitle>Home</PageTitle>
 
@@ -50,3 +54,16 @@ Welcome to your new app. *@
             </div>
         </div>
     </section>
+
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+        var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+        if (listener1.Success || artist1.Success)
+        {
+            navigationManager.NavigateTo("Prime");
+        }
+    }
+}

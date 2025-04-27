@@ -1,0 +1,56 @@
+﻿@page "/showAll"
+@using System.Text.Json
+@using Models
+
+
+
+@if (lst == null)
+{
+    <p><em>@ResultStr</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>date</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in lst)
+            {
+                <tr>
+                    <td>@item.EventID</td>
+                    <td>@item.ArtistName</td>
+                    <td>@item.Date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    string ResultStr = " Loading... ";
+  
+    private List<Events> lst;
+    // public string UID { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+            try
+            {
+                HttpClient httpClient = new HttpClient();
+                string url = "https://33dzsc0b-7131.euw.devtunnels.ms/api/Shows";
+                lst = await httpClient.GetFromJsonAsync<List<Events>>(url);
+            }
+            catch (Exception ex)
+            {
+                ResultStr = ex.Message;
+            }
+        
+    }
+}

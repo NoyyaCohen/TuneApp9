@@ -1,17 +1,197 @@
-﻿@page "/Prime"
+﻿@page "/test"
 @using DBL
 @using Models
 
+@using System.Text.Json
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject ProtectedSessionStorage MySession
+
+<style>
+    /*עיצוב הזמנת הופעות*/
+    .section {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 1rem;
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        font-size: 1.5rem;
+        margin: 0;
+    }
+
+    .section-icon {
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+        fill: #ff3a2e;
+    }
+
+    .see-all {
+        color: #ff3a2e;
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+        .see-all:hover {
+            text-decoration: underline;
+        }
+
+    /* Artists Shows Section Styles */
+    .shows-container {
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding: 0.5rem 0;
+        scroll-behavior: smooth;
+        scrollbar-width: thin;
+        scrollbar-color: #ff3a2e #2a2a35;
+        position: relative;
+    }
+
+        .shows-container::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .shows-container::-webkit-scrollbar-track {
+            background: #2a2a35;
+            border-radius: 10px;
+        }
+
+        .shows-container::-webkit-scrollbar-thumb {
+            background: #ff3a2e;
+            border-radius: 10px;
+        }
+
+    .show-card {
+        min-width: 250px;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        flex: 0 0 auto;
+        transition: transform 0.2s;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+        .show-card:hover {
+            transform: translateY(-5px);
+        }
+
+    .show-image {
+        position: relative;
+        width: 100%;
+        height: 140px;
+        overflow: hidden;
+    }
+
+        .show-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+    .show-date-overlay {
+        position: absolute;
+        top: 0.5rem;
+        left: 0.5rem;
+        padding: 0.3rem 0.5rem;
+        background: #ff3a2e;
+        color: white;
+        font-weight: bold;
+        border-radius: 0.25rem;
+        font-size: 0.8rem;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        transform: rotate(-3deg);
+    }
+
+    .show-info {
+        padding: 0.75rem;
+        background: rgba(35, 35, 45, 0.9);
+    }
+
+    .show-artist-name {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 0.25rem;
+        color: white;
+    }
+
+    .show-place {
+        color: #aaa;
+        font-size: 0.85rem;
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .location-icon {
+        width: 14px;
+        height: 14px;
+        margin-right: 0.3rem;
+        fill: #aaa;
+    }
+
+    .ticket-button {
+        display: block;
+        width: 100%;
+        padding: 0.4rem;
+        background: #ff3a2e;
+        color: white;
+        border: none;
+        border-radius: 0.25rem;
+        text-align: center;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: background-color 0.2s;
+    }
+
+        .ticket-button:hover {
+            background: #ff1f10;
+        }
+
+        .ticket-button:focus {
+            outline: 2px solid #ffaa33;
+        }
+
+    .scroll-indicator {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(35, 35, 45, 0.7);
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .scroll-left {
+        left: 10px;
+    }
+
+    .scroll-right {
+        right: 10px;
+    }
+</style>
 
 <link href="/Prime.css" rel="stylesheet" />
 
 <script type="text/javascript">
     var isFirstInit = true;
 
-    function firstInit() { 
+    function firstInit() {
         const audio = document.getElementById("audio-player");
         const playPauseButton = document.querySelector('.play-pause');
         const playPauseIcon = playPauseButton.querySelector('path');
@@ -53,7 +233,15 @@
             const clickX = e.clientX - rect.left;
             const width = rect.width;
             const percent = clickX / width;
-            audio.currentTime = percent * audio.duration;
+
+            // check if the file was loaded
+            if (audio.seekable.end(0) == 0) {
+                alert("audio is still buffering. please try again later");
+
+            }
+            else {
+                audio.currentTime = percent * audio.duration;
+            }
         });
 
         // Volume control
@@ -102,12 +290,13 @@
 
 
         const audio = document.getElementById("audio-player");
+        audio.preload = "auto"; //על מנת שהשיר יטען מהק יותר
         audio.src = newSrc; // set new source
         audio.load();
         playSong();
     }
 
-    //ניגש לפקד שך האאודיו ואומר לו לנגן ומשנה את האייקון של הניגון
+    //ניגש לפקד של האאודיו ואומר לו לנגן ומשנה את האייקון של הניגון
     function playSong() {
 
         const audio = document.getElementById("audio-player");
@@ -138,7 +327,7 @@
                     <path d="M12 23C8.13 23 5 19.87 5 16c0-3.36 2.5-5 4-8 .73 1.73 1.7 3.4 2.5 5 .5-1.5 1.5-4 1.5-5 0-2.5 5-7.3 5-7.3s1 2 1 3.5c0 3-3 3.5-3 7.5 0 1 .5 2.3 1.5 3 1 .7 1.5 1.2 2 2.5.5 1.3.5 2.9-.5 4-1 1.1-1.5 1.7-3.8 1.7-.63-.01-2.33-.35-3.2-1"></path>
                 </svg>
             </div>
-            <div class="logo-text">INFERNO</div>
+            <div class="logo-text">TUNEAPP</div>
         </div>
     </div>
 
@@ -302,7 +491,7 @@
                             </div>
                             <div class="song-info">
                                 <div class="song-title">@song.SongName</div>
-                                <div class="song-artist">@song.ArtistID</div>
+                                <div class="song-artist">@sName[song.ArtistID]</div>
                                 <div class="song-artist-id" style="display:none;">@song.ArtistID</div>
                                 <div class="song-file-name" style="display:none;">@song.SongFilePath</div>
                             </div>
@@ -564,7 +753,160 @@
             </div>
         </section>
     </div>
+    <!-- Artists Shows -->
+    <section class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <svg class="section-icon" viewBox="0 0 24 24">
+                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" class="svg-icon"></path>
+                </svg>
+                Artists Shows
+            </h2>
+            <a href="#" class="see-all">See All</a>
+        </div>
 
+        <div class="shows-container" role="region" aria-label="Artist shows carousel">
+            <!-- Show Card 1 -->
+            
+                @if(lst != null)
+                {
+                    @foreach (Events e in lst)
+                    {
+                    <div class="show-card">
+                        <div class="show-image">
+                            <img src="/api/placeholder/300/200" alt="Sophie Flame show">
+                            <div class="show-date-overlay">@e.Date.ToString()</div>
+                        </div>
+                        <div class="show-info">
+                            <div class="show-artist-name">@e.ArtistName</div>
+                            <div class="show-place">
+                                <svg class="location-icon" viewBox="0 0 24 24">
+                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                </svg>
+                                @e.Place
+                            </div>
+                            <button class="ticket-button">Tickets</button>
+                        </div>
+                    </div>
+                    }
+                }
+                else
+                {
+                    <p>loaaading</p>
+                }
+                
+            
+
+
+            @* <!-- Show Card 1 -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Sophie Flame show">
+                    <div class="show-date-overlay">May 15</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Sophie Flame</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Ember Arena, Los Angeles
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>
+
+            <!-- Show Card 2 -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Jack Blaze show">
+                    <div class="show-date-overlay">May 22</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Jack Blaze</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Firelight Stadium, Chicago
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>
+
+            <!-- Show Card 3 -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Ember Twins show">
+                    <div class="show-date-overlay">June 5</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Ember Twins</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Phoenix Hall, New York
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>
+
+            <!-- Show Card 4 -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Ash Rose show">
+                    <div class="show-date-overlay">June 18</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Ash Rose</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Wildfire Venue, Miami
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>
+
+            <!-- Show Card 5 (added for demo purposes) -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Blaze Brothers show">
+                    <div class="show-date-overlay">July 3</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Blaze Brothers</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Inferno Club, Austin
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>
+
+            <!-- Show Card 6 (added for demo purposes) -->
+            <div class="show-card">
+                <div class="show-image">
+                    <img src="/api/placeholder/300/200" alt="Crimson Beats show">
+                    <div class="show-date-overlay">July 12</div>
+                </div>
+                <div class="show-info">
+                    <div class="show-artist-name">Crimson Beats</div>
+                    <div class="show-place">
+                        <svg class="location-icon" viewBox="0 0 24 24">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                        </svg>
+                        Spark Center, Seattle
+                    </div>
+                    <button class="ticket-button">Tickets</button>
+                </div>
+            </div>*@
+        </div>
+    </section> 
     <!-- Now Playing Bar -->
     <div class="now-playing">
         <div class="playing-song-info">
@@ -627,6 +969,9 @@
 @code {
     // private Listener listener = new Listener();
     private List<Song> songs = null;
+    Song s = new Song();
+    private Dictionary<int, string> sName = null;
+
 
 
     private Song song = new Song();
@@ -642,9 +987,6 @@
     {
         if (firstRender)
         {
-            SongDB songDB = new SongDB();
-            songs = await songDB.selectAllAsync();
-
             var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
             var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
             if (listener1.Success && artist1.Success)
@@ -662,6 +1004,36 @@
             }
             else
                 navigationManager.NavigateTo("Login");
+        }
+    }
+
+    string ResultStr = " Loading... ";
+
+    private List<Events> lst;
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            string url = "https://33dzsc0b-7131.euw.devtunnels.ms/api/Shows";
+            lst = await httpClient.GetFromJsonAsync<List<Events>>(url);
+        }
+        catch (Exception ex)
+        {
+            ResultStr = ex.Message;
+        }
+
+        SongDB songDB = new SongDB();
+        songs = await songDB.selectAllAsync();
+        sName = new Dictionary<int, string>();
+        ArtistDB artistDB = new ArtistDB();
+        foreach (Song song in songs)//פה אני רציתי להוציא את השם במה של האמן לפי ה-id שלו.
+        {
+            Artist a = await artistDB.GetArtistByID(song.ArtistID);
+            if (!sName.ContainsKey(song.ArtistID))
+            {
+                sName.Add(song.ArtistID, a.StageName);
+            }
         }
     }
 }

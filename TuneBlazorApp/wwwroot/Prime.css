@@ -765,3 +765,181 @@ body {
 .svg-icon {
     fill: currentColor;
 }
+
+
+/*עיצוב הזמנת הופעות*/
+.section {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.section-title {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.section-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 0.5rem;
+    fill: #ff3a2e;
+}
+
+.see-all {
+    color: #ff3a2e;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+    .see-all:hover {
+        text-decoration: underline;
+    }
+
+/* Artists Shows Section Styles */
+.shows-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 0.5rem 0;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    scrollbar-color: #ff3a2e #2a2a35;
+    position: relative;
+}
+
+    .shows-container::-webkit-scrollbar {
+        height: 6px;
+    }
+
+    .shows-container::-webkit-scrollbar-track {
+        background: #2a2a35;
+        border-radius: 10px;
+    }
+
+    .shows-container::-webkit-scrollbar-thumb {
+        background: #ff3a2e;
+        border-radius: 10px;
+    }
+
+.show-card {
+    min-width: 250px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    flex: 0 0 auto;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+    .show-card:hover {
+        transform: translateY(-5px);
+    }
+
+.show-image {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    overflow: hidden;
+}
+
+    .show-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+.show-date-overlay {
+    position: absolute;
+    top: 0.5rem;
+    left: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    background: #ff3a2e;
+    color: white;
+    font-weight: bold;
+    border-radius: 0.25rem;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    transform: rotate(-3deg);
+}
+
+.show-info {
+    padding: 0.75rem;
+    background: rgba(35, 35, 45, 0.9);
+}
+
+.show-artist-name {
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+    color: white;
+}
+
+.show-place {
+    color: #aaa;
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+}
+
+.location-icon {
+    width: 14px;
+    height: 14px;
+    margin-right: 0.3rem;
+    fill: #aaa;
+}
+
+.ticket-button {
+    display: block;
+    width: 100%;
+    padding: 0.4rem;
+    background: #ff3a2e;
+    color: white;
+    border: none;
+    border-radius: 0.25rem;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: background-color 0.2s;
+}
+
+    .ticket-button:hover {
+        background: #ff1f10;
+    }
+
+    .ticket-button:focus {
+        outline: 2px solid #ffaa33;
+    }
+
+.scroll-indicator {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(35, 35, 45, 0.7);
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 1;
+}
+
+.scroll-left {
+    left: 10px;
+}
+
+.scroll-right {
+    right: 10px;
+}

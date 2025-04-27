@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DBL", "DBL\DBL.csproj", "{3
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TuneBlazorApp", "TuneBlazorApp\TuneBlazorApp.csproj", "{E886B0C0-68C4-419D-B070-15CB4969816E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Controllers", "Controllers\Controllers.csproj", "{A65DBAA9-0F72-4AE9-9B52-A4229FA1541A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Controllers", "Controllers\Controllers.csproj", "{A65DBAA9-0F72-4AE9-9B52-A4229FA1541A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

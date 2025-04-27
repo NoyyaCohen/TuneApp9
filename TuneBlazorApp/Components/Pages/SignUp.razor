@@ -180,7 +180,14 @@
         }
     }
 
-
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+        var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+        if (listener1.Success || artist1.Success)
+        {
+            navigationManager.NavigateTo("Prime");
+        }
+    }
 }
-
 }

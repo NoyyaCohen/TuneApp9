@@ -141,30 +141,53 @@ namespace DBL
 
         }
 
-        public async Task<List<Song>> GetSongByGenre(int userID)
+
+        public async Task<List<Song>> GetAllSongByGenreAsync(int idUser)
         {
-            string sql = $@"Select
-                            songs.*
-
-
-                        From
-                            songs Inner Join
-                            artists On songs.artistId = artists.artistId
-                        Where
-                            artists.genreId IN (Select
-                            user_genre_preferences.genreId
-                        From
-                            user_genre_preferences
-                        Where
-                            user_genre_preferences.userId = @p)";
+            string sql = @$"Select
+                                songs.songName,
+                                songs.artistId,
+                                songs.songFilePath,
+                                songs.songId
+                            From
+                                user_genre_preferences Inner Join
+                                users On user_genre_preferences.userId = users.userId Inner Join
+                                artists On user_genre_preferences.genreId = artists.genreId Inner Join
+                                songs On songs.artistId = @id
+                            Where
+                                users.userId = 1;";
             Dictionary<string, object> p = new Dictionary<string, object>();
-            p.Add("p", userID);
-            List<Song> list = (List<Song>)await SelectAllAsync(sql, p);
+            p.Add("id", idUser);
+            List<Song> list = await SelectAllAsync(sql, p);
 
             return list;
 
-
         }
+
+        //public async Task<List<Song>> GetSongByGenre(int userID)
+        //{
+        //    string sql = $@"Select
+        //                    songs.*
+
+
+        //                From
+        //                    songs Inner Join
+        //                    artists On songs.artistId = artists.artistId
+        //                Where
+        //                    artists.genreId IN (Select
+        //                    user_genre_preferences.genreId
+        //                From
+        //                    user_genre_preferences
+        //                Where
+        //                    user_genre_preferences.userId = @p)";
+        //    Dictionary<string, object> p = new Dictionary<string, object>();
+        //    p.Add("p", userID);
+        //    List<Song> list = (List<Song>)await SelectAllAsync(sql, p);
+
+        //    return list;
+
+
+        //}
 
     }
 }
