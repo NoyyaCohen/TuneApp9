@@ -3,7 +3,7 @@
 @using Models
 @using Org.BouncyCastle.Asn1.Tsp
 
-<link href="/Explor.css" rel="stylesheet"/>
+<link href="/Explor.css" rel="stylesheet" />
 
 <!DOCTYPE html>
 <html lang="en">
@@ -140,53 +140,54 @@
 </head>
 <body>
     <div class="explore-page">
-    <div class="page-header">
-        <span class="music-icon">♪</span>
-        <h1 class="page-title">Explore</h1>
+        <div class="page-header">
+            <span class="music-icon">♪</span>
+            <h1 class="page-title">Explore</h1>
+        </div>
     </div>
-</div>
 
-@if (artists!=null && artists.Count!= 0)
-{
-
-    @foreach (var artist in artists)
+    @if (artists != null && artists.Count != 0)
     {
-        <div class="artist-container" id="@artist.StageName.ToLower()">
-            <div class="artist-header" onclick="toggleArtist('@artist.StageName.ToLower()')">
-                <div class="artist-info">
-                    @if (artist.ProfileImage != null)
-                    {
-                        <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String(artist.ProfileImage)" />
-                    }
-                    else
-                    {
-                        <img class="artist-image" src="data:image;base64, @System.Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");" />
-                    }
-                    <span class="artist-name">@artist.StageName</span>
-                </div>
+
+        @foreach (var artist in artists)
+        {
+            <div class="artist-container" id="@artist.StageName.ToLower()">
+                <div class="artist-header" onclick="toggleArtist('@artist.StageName.ToLower()')">
+                    <div class="artist-info">
+                        @if (artist.ProfileImage != null)
+                        {
+                            <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String(artist.ProfileImage)" />
+                        }
+                        else
+                        {
+                            <img class="artist-image" src="data:image;base64, @System.Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");" />
+                        }
+                        <span class="artist-name">@artist.StageName</span>
+                    </div>
 
                     <div class="toggle-icon">▶</div>
-            </div>
+                </div>
 
-            <div class="songs-list">
-                @{
-                    var i = 1;
-                    foreach (var song in artistIdToSongsList[artist.ArtistID])
-                    {
-                        <div class="song-item">
-                            <div class="song-number">@i</div>
-                            <div class="song-title">@song.SongName</div>
-                            <div class="song-duration">@song.SongFilePath</div>
-                        </div>
-                        i++;
+                <div class="songs-list">
+                    @{
+                        foreach (var song in artistIdToSongsList)
+                        {
+                            @if (song.ArtistID == artist.ArtistID)
+                            {
+                                <div class="song-item">
+                                    <div class="song-number"></div>
+                                    <div class="song-title">@song.SongName</div>
+                                    <div class="song-duration">@song.SongFilePath</div>
+                                </div>
+                            }
+                        }
                     }
-                }
+                </div>
             </div>
-        </div>
+        }
     }
-}
 
-<script>
+    <script>
         function toggleArtist(id) {
             const artistElement = document.getElementById(id);
             const isActive = artistElement.classList.contains('active');
@@ -207,7 +208,7 @@
 @code
 {
     public List<Artist> artists { get; set; } = null;
-    private Dictionary<int, List<Song>> artistIdToSongsList = new();
+    private List<Song> artistIdToSongsList = new();
     private ArtistDB artistDB = new ArtistDB();
     // private List<byte[]> photo = new List<byte[]>();
     // private byte[] photo = artistDB.ArtistPhoto();
@@ -227,7 +228,12 @@
 
             foreach (var artist in artists)
             {
-                artistIdToSongsList.Add(artist.ArtistID, await songDB.GetAllSongByArtisIDtAsync(artist.ArtistID));
+                List<Song> slist = await songDB.GetAllSongByArtisIDtAsync(artist.ArtistID);
+                if (slist != null)
+                {
+                    artistIdToSongsList.AddRange(slist);
+                }
+                
                 // photo.Add(await artistDB.ArtistPhoto(artist.ArtistID));
                 //Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");
             }

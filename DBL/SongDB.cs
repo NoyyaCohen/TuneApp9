@@ -142,26 +142,41 @@ namespace DBL
         }
 
 
-        public async Task<List<Song>> GetAllSongByGenreAsync(int idUser)
+        public async Task<List<Song>> GetAllSongByGenreAsync(int userId)
         {
-            string sql = @$"Select
+            string sql = @$"select
+                                songs.songId,
                                 songs.songName,
                                 songs.artistId,
-                                songs.songFilePath,
-                                songs.songId
-                            From
-                                user_genre_preferences Inner Join
-                                users On user_genre_preferences.userId = users.userId Inner Join
-                                artists On user_genre_preferences.genreId = artists.genreId Inner Join
-                                songs On songs.artistId = @id
-                            Where
-                                users.userId = 1;";
+                                songs.songFilePath
+                            from songs inner join artists
+                                on songs.artistId = artists.artistId
+                            where artists.genreId in
+                            (select genreId from user_genre_preferences where userId = @userId);";
             Dictionary<string, object> p = new Dictionary<string, object>();
-            p.Add("id", idUser);
+            p.Add("userId", userId);
             List<Song> list = await SelectAllAsync(sql, p);
 
             return list;
+        }
 
+        public async Task<List<Song>> GetAllSongsByFollowedArtists(int userId)
+        {
+            string sql = $@"select
+                                songs.songId,
+                                songs.songName,
+                                songs.artistId,
+                                songs.songFilePath
+                            from songs inner join artists
+                                on songs.artistId = artists.artistId
+                            where artists.artistId in
+                            (select artistID from user_artist_follows where userID = @userId);";
+
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("userId", userId);
+            List<Song> list = await SelectAllAsync(sql, p);
+
+            return list;
         }
 
         //public async Task<List<Song>> GetSongByGenre(int userID)

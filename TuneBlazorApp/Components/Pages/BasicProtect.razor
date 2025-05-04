@@ -1,0 +1,187 @@
+﻿@page "/basicprotect"
+@using DBL
+@using Models
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject ProtectedSessionStorage MySession
+
+
+<div class="page">
+    <h1 class="title">My Music Genres</h1>
+
+    <div class="genres-container">
+        <div class="genre-column">
+            <div class="column-header">Available Genres</div>
+            <ul class="genre-list">
+                <li class="genre-item">
+                    Electronic/Dance
+                    <button class="btn-add">+</button>
+                </li>
+                <li class="genre-item">
+                    Hip Hop/Rap
+                    <button class="btn-add">+</button>
+                </li>
+                <li class="genre-item">
+                    K-pop
+                    <button class="btn-add">+</button>
+                </li>
+                <li class="genre-item">
+                    Latin
+                    <button class="btn-add">+</button>
+                </li>
+                <li class="genre-item">
+                    Metal
+                    <button class="btn-add">+</button>
+                </li>
+                <li class="genre-item">
+                    Rock/Alternative
+                    <button class="btn-add">+</button>
+                </li>
+            </ul>
+        </div>
+
+        <div class="genre-column">
+            <div class="column-header">My Favorites</div>
+            <ul class="genre-list">
+                <li class="genre-item">
+                    Pop
+                    <button class="btn-remove">×</button>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="save-container">
+        <button class="btn-save">Save</button>
+    </div>
+</div>
+
+<style>
+    .page {
+        background-color: #000;
+        color: white;
+        min-height: 100vh;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .title {
+        margin: 20px 0 30px 0;
+        text-align: center;
+    }
+
+    .genres-container {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        width: 100%;
+        max-width: 600px;
+    }
+
+    .genre-column {
+        background-color: #000;
+        border-radius: 5px;
+        width: 250px;
+    }
+
+    .column-header {
+        background-color: #222;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        border-radius: 5px 5px 0 0;
+        font-weight: bold;
+    }
+
+    .genre-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        background-color: #222;
+        border-radius: 0 0 5px 5px;
+    }
+
+    .genre-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        border-bottom: 1px solid #333;
+    }
+
+        .genre-item:last-child {
+            border-bottom: none;
+        }
+
+    .btn-add, .btn-remove {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: none;
+        color: white;
+        font-weight: bold;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+
+    .btn-add {
+        background-color: #4CAF50;
+    }
+
+    .btn-remove {
+        background-color: #f44336;
+    }
+
+    .save-container {
+        margin-top: 20px;
+    }
+
+    .btn-save {
+        background-color: #2196F3;
+        color: white;
+        border: none;
+        padding: 8px 30px;
+        border-radius: 4px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+</style>
+
+
+
+
+@code 
+{
+    private Listener listener;
+    private Artist artist;
+    private bool IsArtist = false;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+            var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+            if (listener1.Success && artist1.Success)
+            {
+                artist = artist1.Value;
+                artist.UserName = listener1.Value.UserName;
+                listener = listener1.Value;
+                IsArtist = true;
+                StateHasChanged();
+            }
+            else if (listener1.Success)
+            {
+                listener = listener1.Value;
+                StateHasChanged();
+            }
+            else
+                navigationManager.NavigateTo("Login");
+        }
+    }
+}
