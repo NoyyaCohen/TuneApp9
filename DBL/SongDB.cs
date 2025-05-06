@@ -125,9 +125,7 @@ namespace DBL
         public async Task<List<Song>> GetAllSongByArtisIDtAsync(int ArtistID)
         {
             string sql = @$"Select
-                                songs.songId,
-                                songs.songName,
-                                songs.artistId
+                                songs.*
                             From
                                 artists Inner Join
                                 songs On songs.artistId = artists.artistId

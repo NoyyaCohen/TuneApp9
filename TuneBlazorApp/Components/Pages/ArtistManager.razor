@@ -31,10 +31,15 @@
                     <span class="nav-icon">⚙️</span>
                     <span class="nav-text">User Settings</span>
                 </li>
+                <li class="nav-item @(currentPage == "tweetManager" ? "active" : "")" @onclick='() => ChangePage("tweetManager")'>
+                    <span class="nav-icon">💬</span>
+                    <span class="nav-text">Tweet</span>
+                </li>
                 <li class="nav-item" @onclick="Logout">
                     <span class="nav-icon">🚪</span>
                     <span class="nav-text">Logout</span>
                 </li>
+                
             </ul>
         </nav>
     </div>
@@ -116,6 +121,26 @@
                     </div>
                 </div>
             }
+            else if (currentPage == "tweetManager")
+            {
+                <div class="settings-content">
+                    <h1>Your Tweets !</h1>
+                    <p>Post a new tweet to your followers !</p>
+
+                    <div>
+                        <div class="form-group">
+                            <label>Your Tweet:</label>
+                            <input @bind="myNewTweetTitle" type="text" class="form-input" placeholder="The title" />
+                            <textarea @bind="myNewTweet" class="form-input" placeholder="Your Tweet" rows="4" cols="50"></textarea>
+
+                        </div>
+
+                        <button @onclick="SaveTweet" class="submit-button">Submit Tweet</button>
+
+                        <p class="status-message">@tweetStatusMessage</p>
+                    </div>
+                </div>
+            }
         </div>
     </div>
 </div>
@@ -141,6 +166,9 @@
     private string currentPassword = "";
     private string newPassword = "";
     private string confirmPassword = "";
+    private string myNewTweet = "";
+    private string myNewTweetTitle = "";
+    private string tweetStatusMessage = "";
     private string settingsStatusMessage = "";
 
     protected override async Task OnInitializedAsync()
@@ -316,10 +344,31 @@
             }
         }
         // Clear the tracking lists
-       
+
         filePaths.Clear();
         uploadedFiles.Clear();
     }
+
+    private async Task SaveTweet()
+    {
+        // Input validation
+        if (string.IsNullOrWhiteSpace(myNewTweet))
+        {
+            tweetStatusMessage = "No text...";
+            return;
+        }
+        
+        if (myNewTweet.Length > 200)
+        {
+            tweetStatusMessage = "Dont make it too lonk, keep 200 chracters...";
+            return;
+        }
+
+
+
+
+    }
+
 
     // User settings methods
     private async Task SaveSettings()

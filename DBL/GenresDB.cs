@@ -44,7 +44,25 @@ namespace DBL
         {
             return await base.SelectAllAsync();
         }
-  
+
+        public async Task<List<Genres>> GetGenreByUserId(int UserID)
+        {
+            string sql = @$"Select
+                                genres.genreId,
+                                genres.genreName
+                            From
+                                genres Inner Join
+                                user_genre_preferences On user_genre_preferences.genreId = genres.genreId
+                            Where
+                                user_genre_preferences.userId = @userId";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("userId", UserID.ToString());
+            List<Genres> list = (List<Genres>)await SelectAllAsync(sql, p);
+
+            return list;
+
+        }
+
 
     }
 }
