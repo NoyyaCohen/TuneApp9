@@ -45,6 +45,19 @@ namespace DBL
             return await base.SelectAllAsync();
         }
 
+        public async Task<Dictionary<int, string>> SelectAllGenresDictionaryAsync()
+        {
+            List<Genres> genresList = await base.SelectAllAsync();
+            Dictionary<int, string> genresDict = new Dictionary<int, string>();
+
+            foreach (var genre in genresList)
+            {
+                genresDict.Add(genre.Genre, genre.GenreName);
+            }
+
+            return genresDict;
+        }
+
         public async Task<List<Genres>> GetGenreByUserId(int UserID)
         {
             string sql = @$"Select

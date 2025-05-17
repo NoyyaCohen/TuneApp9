@@ -23,6 +23,13 @@ namespace Models
             this.ArtistPosterID = artistPosterID;
             this.PostDate = postDate;
         }
+        public Feed(string title, string message, int artistPosterID, DateTime postDate)
+        {
+            this.Title = title;
+            this.Message = message;
+            this.ArtistPosterID = artistPosterID;
+            this.PostDate = postDate;
+        }
         public Feed() { } 
 
         public int PostID { get => postID; set => postID = value; }

@@ -1,9 +1,4 @@
 ﻿using Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DBL
 {
@@ -50,7 +45,7 @@ namespace DBL
         }
         protected override string GetPrimaryKeyName()
         {
-            return "artistID";
+            return "artistId";
         }
 
         protected override string GetTableName()
@@ -78,13 +73,15 @@ namespace DBL
         {
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
-                { "stageName", artist.StageName },
-                {"followersNumber" , artist.FollowersNumber } ,
-                {"genreID", artist.GenreID },
-                {"profileImage" , artist.ProfileImage}
+                {"artistId", artist.ArtistID },
+                {"stageName", artist.StageName },
+                {"genreId", artist.GenreID },
+                {"profileImage" , artist.ProfileImage},
+                {"followersNumber", 0 }
             };
             return (Artist)await base.InsertGetObjAsync(fillValues);
         }
+
         public async Task<List<Artist>> GetAllAsync()
         {
             return ((List<Artist>)await SelectAllAsync());
@@ -106,6 +103,20 @@ namespace DBL
             return await base.UpdateAsync(fillValues, filterValues);
         }
 
+        public async Task<Artist> GetArtistBySongAsync(int ArtistID)
+        {
+            string sql = @$"SELECT * FROM tuneapp.artusts";
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("artistID", ArtistID.ToString());
+            List<Artist> list = (List<Artist>)await SelectAllAsync(sql, p);
+            Artist artist = null;
+            foreach(var a in list)
+            {
+                artist = a;
+            }
+            return artist;
+        }
+
         //public async Task<byte[]> ArtistPhoto(int id)
         //{
         //    Dictionary<string, object> p = new Dictionary<string, object>();
@@ -120,6 +131,6 @@ namespace DBL
         //            "CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");
         //}
 
-        
+
     }
 }

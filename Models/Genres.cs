@@ -22,26 +22,4 @@ namespace Models
         public int Genre { get => genre; set => genre = value; }
         public string GenreName { get => genreName; set => genreName = value; }
     }
-
-
-
-
-
-    //public int GenreID { get; set; }
-    //public string GenreName { get; set; }
-    ////private int genreID;
-    ////private string genreName;
-
-    //public Genres(int genreID, string genreName)
-    //{
-    //    this.GenreID = genreID;
-    //    this.GenreName = genreName;
-    //    //this.GenreID = genreID;
-    //    //this.GenreName = genreName;
-    //}
-
-    //public Genres() { }
-
-    ////public int GenreID { get => GenreID; set => GenreID = value; }
-    ////public string GenreName { get => genreName; set => genreName = value; }
 }

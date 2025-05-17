@@ -357,11 +357,11 @@
             </svg>
             Create Playlist
         </a>
-        <a class="nav-item">
+        <a class="nav-item" href="UserSettings" >
             <svg class="nav-icon" viewBox="0 0 24 24">
                 <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" class="svg-icon"></path>
             </svg>
-            Liked Songs
+            User Settings 
         </a>
 
         @if (IsArtist)
@@ -487,6 +487,18 @@
                     {
                         <div class="song-card" onclick="changeMusicFile(event)">
                             <div class="song-thumbnail">
+                                @* @if(!= null)
+                                {
+                                    <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String((await artistDB.GetArtistBySongAsync(song.ArtistID)).ProfileImage)" />
+                                }
+                                @if (song != null)
+                                {
+                                    <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String(song.)" />
+                                }
+                                else
+                                {
+                                    <img class="artist-image" src="data:image;base64, @System.Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");" />
+                                } *@
                                 <img src="/api/placeholder/300/300" alt="Song Cover">
                                 <div class="song-play">▶</div>
                             </div>
@@ -551,79 +563,88 @@
 
             <div class="message-grid">
                 <!-- Message 1 -->
-                <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-avatar">
-                            <img src="/api/placeholder/100/100" alt="Artist Avatar">
-                        </div>
-                        <div class="message-sender">
-                            <div class="sender-name">
-                                Sophie Flame
-                                <svg class="verified-badge" viewBox="0 0 24 24">
-                                    <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
-                                </svg>
+                @if (lstFeed != null)
+                {
+                    @foreach (var message in lstFeed)
+                    {
+                        <div class="message-card">
+                            <div class="message-header">
+                                <div class="message-avatar">
+                                    <img src="/api/placeholder/100/100" alt="Artist Avatar">
+                                </div>
+                                <div class="message-sender">
+                                    <div class="sender-name">
+                                        @mName[message.ArtistPosterID] 
+                                        <svg class="verified-badge" viewBox="0 0 24 24">
+                                            <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
+                                        </svg>
+                                    </div>
+                                    <div class="message-time">@message.PostDate</div>
+                                </div>
                             </div>
-                            <div class="message-time">Today, 10:23 AM</div>
+                            <div class="message-title">
+                                @message.Title
+                            </div>
+                            <div class="message-content">
+                                @message.Message
+                            </div>
+                            <div class="message-actions">
+                                <button class="message-button">Reply</button>
+                                <button class="message-button primary">Listen Now</button>
+                            </div>
                         </div>
-                    </div>
-                    <div class="message-content">
-                        Hey fans! Just dropped my new single "Fire & Ice" today! Check it out and let me know what you think. Can't wait to hear your feedback! 🔥❤️
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-button">Reply</button>
-                        <button class="message-button primary">Listen Now</button>
-                    </div>
-                </div>
+                    }
+                }
 
-                <!-- Message 2 -->
+                @* <!-- Message 2 -->
                 <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-avatar">
-                            <img src="/api/placeholder/100/100" alt="Artist Avatar">
-                        </div>
-                        <div class="message-sender">
-                            <div class="sender-name">
-                                Jack Blaze
-                                <svg class="verified-badge" viewBox="0 0 24 24">
-                                    <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
-                                </svg>
-                            </div>
-                            <div class="message-time">Yesterday, 3:45 PM</div>
-                        </div>
-                    </div>
-                    <div class="message-content">
-                        Announcing my summer tour dates! I'll be hitting 15 cities across the country. Pre-sale tickets available tomorrow for my followers. Use code BLAZEFAN for 15% off!
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-button">Reply</button>
-                        <button class="message-button primary">Get Tickets</button>
-                    </div>
+                <div class="message-header">
+                <div class="message-avatar">
+                <img src="/api/placeholder/100/100" alt="Artist Avatar">
                 </div>
+                <div class="message-sender">
+                <div class="sender-name">
+                Jack Blaze
+                <svg class="verified-badge" viewBox="0 0 24 24">
+                <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
+                </svg>
+                </div>
+                <div class="message-time">Yesterday, 3:45 PM</div>
+                </div>
+                </div>
+                <div class="message-content">
+                Announcing my summer tour dates! I'll be hitting 15 cities across the country. Pre-sale tickets available tomorrow for my followers. Use code BLAZEFAN for 15% off!
+                </div>
+                <div class="message-actions">
+                <button class="message-button">Reply</button>
+                <button class="message-button primary">Get Tickets</button>
+                </div>
+                </div> *@
 
-                <!-- Message 3 -->
+                @* <!-- Message 3 -->
                 <div class="message-card">
-                    <div class="message-header">
-                        <div class="message-avatar">
-                            <img src="/api/placeholder/100/100" alt="Artist Avatar">
-                        </div>
-                        <div class="message-sender">
-                            <div class="sender-name">
-                                Ember Twins
-                                <svg class="verified-badge" viewBox="0 0 24 24">
-                                    <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
-                                </svg>
-                            </div>
-                            <div class="message-time">Yesterday, 11:20 AM</div>
-                        </div>
-                    </div>
-                    <div class="message-content">
-                        We're going live on Instagram tomorrow at 8 PM to talk about our new album and answer your questions! Set a reminder and join us for some exclusive news! 🔥🎵
-                    </div>
-                    <div class="message-actions">
-                        <button class="message-button">Reply</button>
-                        <button class="message-button primary">Set Reminder</button>
-                    </div>
+                <div class="message-header">
+                <div class="message-avatar">
+                <img src="/api/placeholder/100/100" alt="Artist Avatar">
                 </div>
+                <div class="message-sender">
+                <div class="sender-name">
+                Ember Twins
+                <svg class="verified-badge" viewBox="0 0 24 24">
+                <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
+                </svg>
+                </div>
+                <div class="message-time">Yesterday, 11:20 AM</div>
+                </div>
+                </div>
+                <div class="message-content">
+                We're going live on Instagram tomorrow at 8 PM to talk about our new album and answer your questions! Set a reminder and join us for some exclusive news! 🔥🎵
+                </div>
+                <div class="message-actions">
+                <button class="message-button">Reply</button>
+                <button class="message-button primary">Set Reminder</button>
+                </div>
+                </div> *@
             </div>
         </section>
     </div>
@@ -671,113 +692,7 @@
 
 
 
-            @* <!-- Show Card 1 -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Sophie Flame show">
-            <div class="show-date-overlay">May 15</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Sophie Flame</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Ember Arena, Los Angeles
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>
 
-            <!-- Show Card 2 -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Jack Blaze show">
-            <div class="show-date-overlay">May 22</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Jack Blaze</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Firelight Stadium, Chicago
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>
-
-            <!-- Show Card 3 -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Ember Twins show">
-            <div class="show-date-overlay">June 5</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Ember Twins</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Phoenix Hall, New York
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>
-
-            <!-- Show Card 4 -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Ash Rose show">
-            <div class="show-date-overlay">June 18</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Ash Rose</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Wildfire Venue, Miami
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>
-
-            <!-- Show Card 5 (added for demo purposes) -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Blaze Brothers show">
-            <div class="show-date-overlay">July 3</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Blaze Brothers</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Inferno Club, Austin
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>
-
-            <!-- Show Card 6 (added for demo purposes) -->
-            <div class="show-card">
-            <div class="show-image">
-            <img src="/api/placeholder/300/200" alt="Crimson Beats show">
-            <div class="show-date-overlay">July 12</div>
-            </div>
-            <div class="show-info">
-            <div class="show-artist-name">Crimson Beats</div>
-            <div class="show-place">
-            <svg class="location-icon" viewBox="0 0 24 24">
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-            </svg>
-            Spark Center, Seattle
-            </div>
-            <button class="ticket-button">Tickets</button>
-            </div>
-            </div>*@
         </div>
     </section>
     <!-- Now Playing Bar -->
@@ -787,8 +702,8 @@
                 <img src="/api/placeholder/50/50" alt="Now Playing">
             </div>
             <div class="playing-details">
-                <div class="playing-title">Phoenix Rising</div>
-                <div class="playing-artist">Firebird</div>
+                <div class="playing-title">-------</div>
+                <div class="playing-artist">------</div>
             </div>
         </div>
 
@@ -841,13 +756,17 @@
 
 @code {
     // private Listener listener = new Listener();
-    private List<Song> songs = null;
-    private List<Song> songsByGenre = null;
-    private List<Song> songsByFollowedArtists = null;
+    private List<Song> songs = new List<Song>();
+    private List<Song> songsByGenre = new List<Song>();
+    private List<Song> songsByFollowedArtists = new List<Song>();
     Song s = new Song();
-    private Dictionary<int, string> sName = null;
+    private Dictionary<int, string> sName = new Dictionary<int, string>();
+    private Dictionary<int, string> mName = new Dictionary<int, string>();
+    private List<Feed> lstFeed = null;
+    FeedDB feedDB = new FeedDB();
 
-
+    SongDB songDB = new SongDB();
+    ArtistDB artistDB = new ArtistDB();
 
 
     private Song song = new Song();
@@ -878,10 +797,10 @@
 
 
                 ///
-                SongDB songDB = new SongDB();
                 songs = await songDB.selectAllAsync();
                 sName = new Dictionary<int, string>();
-                ArtistDB artistDB = new ArtistDB();
+                mName = new Dictionary<int, string>();
+                
                 foreach (Song song in songs)
                 {
                     Artist a = await artistDB.GetArtistByID(song.ArtistID);
@@ -903,8 +822,11 @@
             }
             else
                 navigationManager.NavigateTo("Login");
+
         }
+
     }
+
 
 
 
@@ -921,27 +843,40 @@
             ResultStr = ex.Message;
         }
 
-       /* var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
-        if (listener1.Success)
-        {
-            artist.UserName = listener1.Value.UserName;
-            listener = listener1.Value;
-        }
-        SongDB songDB = new SongDB();
-        songs = await songDB.selectAllAsync();
-        sName = new Dictionary<int, string>();
+
+        lstFeed = await feedDB.GetAllAsync();
         ArtistDB artistDB = new ArtistDB();
-        foreach (Song song in songs)
+        foreach (var m in lstFeed)
         {
-            Artist a = await artistDB.GetArtistByID(song.ArtistID);
-            if (!sName.ContainsKey(song.ArtistID))
+            Artist a = await artistDB.GetArtistByID(m.ArtistPosterID);
+            if (!mName.ContainsKey(m.ArtistPosterID))
             {
-                sName.Add(song.ArtistID, a.StageName);
+                mName.Add(m.ArtistPosterID, a.StageName);
             }
         }
 
-        songsByGenre = await songDB.GetAllSongByGenreAsync(listener.UserID);
-        songsByFollowedArtists = await songDB.GetAllSongsByFollowedArtists(listener.UserID);*/
+
+        /* var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+         if (listener1.Success)
+         {
+             artist.UserName = listener1.Value.UserName;
+             listener = listener1.Value;
+         }
+         SongDB songDB = new SongDB();
+         songs = await songDB.selectAllAsync();
+         sName = new Dictionary<int, string>();
+         ArtistDB artistDB = new ArtistDB();
+         foreach (Song song in songs)
+         {
+             Artist a = await artistDB.GetArtistByID(song.ArtistID);
+             if (!sName.ContainsKey(song.ArtistID))
+             {
+                 sName.Add(song.ArtistID, a.StageName);
+             }
+         }
+
+         songsByGenre = await songDB.GetAllSongByGenreAsync(listener.UserID);
+         songsByFollowedArtists = await songDB.GetAllSongsByFollowedArtists(listener.UserID);*/
 
     }
 }

@@ -39,7 +39,7 @@ namespace DBL
 
         protected override string GetTableName()
         {
-            return "feed_upload";
+            return "artists_posts";
         }
 
         public async Task<List<Feed>> selectAllAsync()
@@ -57,13 +57,14 @@ namespace DBL
                 return null;
         }
 
-        public async Task<Feed> InsertGetObjAsync(Feed feed, string password)
+        public async Task<Feed> InsertGetObjAsync(Feed feed)
         {
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
             {
-                { "title", feed.Title } ,
+                {"title", feed.Title } ,
                 { "message", feed.Message },
-                {"artistFeedID", feed.ArtistPosterID }
+                {"artistPosterID", feed.ArtistPosterID },
+                {"postDate" , feed.PostDate}
             };
             return (Feed)await base.InsertGetObjAsync(fillValues);
         }

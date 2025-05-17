@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Net.Mail;
+using System.Text.RegularExpressions;
 using Models;
 
 
@@ -55,6 +56,16 @@ namespace DBL
             else
                 return null;
         }
+        public async Task<Listener> GetListenerByEmail(string emailAddress)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters["emailAddress"] = emailAddress;
+            List<Listener> ListenerDTOs = await base.SelectAllAsync(parameters);
+            if (ListenerDTOs != null && ListenerDTOs.Count == 1)
+                return ListenerDTOs[0];
+            else
+                return null;
+        }
 
         public async Task<Listener> InsertGetObjAsync(Listener listener, string password)
         {
@@ -86,6 +97,15 @@ namespace DBL
             fillValues.Add("fullName", listener.FullName);
             fillValues.Add("userName", listener.UserName);
             fillValues.Add("emailAddress", listener.EmailAddress);
+            return await base.UpdateAsync(fillValues, filterValues);
+        }
+
+        public async Task<int> ResetPassAsync(Listener listener)
+        {
+            Dictionary<string, object> fillValues = new Dictionary<string, object>();
+            Dictionary<string, object> filterValues = new Dictionary<string, object>();
+            fillValues.Add("passwordHash", listener.PasswordHash);
+            filterValues.Add("userID", listener.UserID);
             return await base.UpdateAsync(fillValues, filterValues);
         }
 

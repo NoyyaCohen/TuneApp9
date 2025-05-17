@@ -27,17 +27,10 @@
                     <span class="nav-icon">📂</span>
                     <span class="nav-text">File Upload</span>
                 </li>
-                <li class="nav-item @(currentPage == "settings" ? "active" : "")" @onclick='() => ChangePage("settings")'>
-                    <span class="nav-icon">⚙️</span>
-                    <span class="nav-text">User Settings</span>
-                </li>
+                
                 <li class="nav-item @(currentPage == "tweetManager" ? "active" : "")" @onclick='() => ChangePage("tweetManager")'>
                     <span class="nav-icon">💬</span>
                     <span class="nav-text">Tweet</span>
-                </li>
-                <li class="nav-item" @onclick="Logout">
-                    <span class="nav-icon">🚪</span>
-                    <span class="nav-text">Logout</span>
                 </li>
                 
             </ul>
@@ -88,39 +81,7 @@
                     </div>
                 </div>
             }
-            else if (currentPage == "settings") 
-            {
-                <div class="settings-content">
-                    <h1>User Settings</h1>
-                    <p>Manage your account preferences.</p>
-
-                    <div class="settings-form">
-                        <div class="form-group">
-                            <label>Email</label>
-                            <input @bind="userEmail" type="email" class="form-input" placeholder="Enter your email">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Current Password</label>
-                            <input @bind="currentPassword" type="password" class="form-input" placeholder="Enter current password">
-                        </div>
-
-                        <div class="form-group">
-                            <label>New Password</label>
-                            <input @bind="newPassword" type="password" class="form-input" placeholder="Enter new password">
-                        </div>
-
-                        <div class="form-group">
-                            <label>Confirm New Password</label>
-                            <input @bind="confirmPassword" type="password" class="form-input" placeholder="Confirm new password">
-                        </div>
-
-                        <button @onclick="SaveSettings" class="submit-button">SAVE CHANGES</button>
-
-                        <p class="status-message">@settingsStatusMessage</p>
-                    </div>
-                </div>
-            }
+            
             else if (currentPage == "tweetManager")
             {
                 <div class="settings-content">
@@ -135,7 +96,7 @@
 
                         </div>
 
-                        <button @onclick="SaveTweet" class="submit-button">Submit Tweet</button>
+                        <button @onclick="InsertTweet" class="submit-button">Submit Tweet</button>
 
                         <p class="status-message">@tweetStatusMessage</p>
                     </div>
@@ -149,8 +110,9 @@
     // User state
     private Listener listener;
     private Artist artist;
-
+    FeedDB feedDB = new FeedDB();
     SongDB songdb = new SongDB();
+    List<Feed> lstFeed = null;
 
     // Navigation state
     private string currentPage = "home";
@@ -195,6 +157,7 @@
         {
             navigationManager.NavigateTo("/Login");
         }
+        
     }
 
     private void ChangePage(string page)
@@ -205,12 +168,8 @@
         settingsStatusMessage = "";
     }
 
-    private async Task Logout()
-    {
-        await MySession.DeleteAsync("ListenerLogin");
-        await MySession.DeleteAsync("ArtistLogin");
-        navigationManager.NavigateTo("/Login");
-    }
+    
+
 
     // File upload methods
     private void OnInputFileChange(InputFileChangeEventArgs e)
@@ -325,6 +284,15 @@
         }
     }
 
+    public async Task InsertTweet()
+    {
+        FeedDB feedDB = new FeedDB();
+        Feed f = new Feed(myNewTweetTitle, myNewTweet, artist.ArtistID, DateTime.Now);
+
+        Feed feed = await feedDB.InsertGetObjAsync(f);
+        tweetStatusMessage = "";
+    }
+
     // Add this method to your @code block
     private void DeleteUploadedFiles(List<string> filePaths)
     {
@@ -363,77 +331,73 @@
             tweetStatusMessage = "Dont make it too lonk, keep 200 chracters...";
             return;
         }
-
-
-
-
     }
 
 
     // User settings methods
-    private async Task SaveSettings()
-    {
-        // Input validation
-        if (string.IsNullOrWhiteSpace(userEmail))
-        {
-            settingsStatusMessage = "Email cannot be empty.";
-            return;
-        }
+    // private async Task SaveSettings()
+    // {
+    //     // Input validation
+    //     if (string.IsNullOrWhiteSpace(userEmail))
+    //     {
+    //         settingsStatusMessage = "Email cannot be empty.";
+    //         return;
+    //     }
 
-        if (!string.IsNullOrWhiteSpace(newPassword))
-        {
-            if (string.IsNullOrWhiteSpace(currentPassword))
-            {
-                settingsStatusMessage = "Current password is required to set a new password.";
-                return;
-            }
+    //     if (!string.IsNullOrWhiteSpace(newPassword))
+    //     {
+    //         if (string.IsNullOrWhiteSpace(currentPassword))
+    //         {
+    //             settingsStatusMessage = "Current password is required to set a new password.";
+    //             return;
+    //         }
 
-            if (newPassword != confirmPassword)
-            {
-                settingsStatusMessage = "New password and confirmation do not match.";
-                return;
-            }
+    //         if (newPassword != confirmPassword)
+    //         {
+    //             settingsStatusMessage = "New password and confirmation do not match.";
+    //             return;
+    //         }
 
-            // Here you would typically verify the current password against the stored password
-            // This is a dummy implementation
-            if (currentPassword != "dummyPassword")
-            {
-                settingsStatusMessage = "Current password is incorrect.";
-                return;
-            }
-        }
+    //         // Here you would typically verify the current password against the stored password
+    //         // This is a dummy implementation
+    //         if (currentPassword != "dummyPassword")
+    //         {
+    //             settingsStatusMessage = "Current password is incorrect.";
+    //             return;
+    //         }
+    //     }
 
-        try
-        {
-            // Update email (dummy implementation)
-            if (listener != null && listener.EmailAddress != userEmail)
-            {
-                listener.EmailAddress = userEmail;
-                // Here you would typically save the updated email to your database
-                // For example: await listenerDB.UpdateListenerAsync(listener);
-            }
+    //     try
+    //     {
+    //         // Update email (dummy implementation)
+    //         if (listener != null && listener.EmailAddress != userEmail)
+    //         {
+    //             listener.EmailAddress = userEmail;
+    //             // Here you would typically save the updated email to your database
+    //             // For example: await listenerDB.UpdateListenerAsync(listener);
+    //         }
 
-            // Update password (dummy implementation)
-            if (!string.IsNullOrWhiteSpace(newPassword))
-            {
-                // Here you would typically update the password in your database
-                // For example: await listenerDB.UpdatePasswordAsync(listener.UserID, newPassword);
+    //         // Update password (dummy implementation)
+    //         if (!string.IsNullOrWhiteSpace(newPassword))
+    //         {
+    //             // Here you would typically update the password in your database
+    //             // For example: await listenerDB.UpdatePasswordAsync(listener.UserID, newPassword);
 
-                // Clear password fields after successful update
-                currentPassword = "";
-                newPassword = "";
-                confirmPassword = "";
-            }
+    //             // Clear password fields after successful update
+    //             currentPassword = "";
+    //             newPassword = "";
+    //             confirmPassword = "";
+    //         }
 
-            settingsStatusMessage = "Settings updated successfully!";
+    //         settingsStatusMessage = "Settings updated successfully!";
 
-            // Update session with new listener data
-            await MySession.SetAsync("ListenerLogin", listener);
-        }
-        catch (Exception ex)
-        {
-            settingsStatusMessage = $"Error: {ex.Message}";
-            await js.InvokeVoidAsync("console.error", ex.ToString());
-        }
-    }
+    //         // Update session with new listener data
+    //         await MySession.SetAsync("ListenerLogin", listener);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         settingsStatusMessage = $"Error: {ex.Message}";
+    //         await js.InvokeVoidAsync("console.error", ex.ToString());
+    //     }
+    // }
 }

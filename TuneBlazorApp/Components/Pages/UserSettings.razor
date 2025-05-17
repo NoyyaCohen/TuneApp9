@@ -1,0 +1,497 @@
+﻿@page "/UserSettings"
+@using System.Collections
+@using DBL
+@using Models
+@inject NavigationManager navigationManager
+@inject IJSRuntime js
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@inject ProtectedSessionStorage MySession
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Environment
+@using Microsoft.AspNetCore.Components.Forms
+@using System.IO
+
+<link href="/Prime.css" rel="stylesheet" />
+
+<div class="app-container">
+    <!-- Left Sidebar - Navigation Menu -->
+    <div class="sidebar">
+        <div class="logo-container">
+            <div class="app-logo">TuneApp - Manager</div>
+        </div>
+
+        <nav class="main-nav">
+            <ul>
+                <li class="nav-item @(currentPage == "home" ? "active" : "")" @onclick='() => ChangePage("home")'>
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">Home</span>
+                </li>
+                <li class="nav-item @(currentPage == "personalDetails" ? "active" : "")" @onclick='() => ChangePage("personalDetails")'>
+                    <span class="nav-icon">👤</span>
+                    <span class="nav-text">Personal Details</span>
+                </li>
+                <li class="nav-item @(currentPage == "changePassword" ? "active" : "")" @onclick='() => ChangePage("changePassword")'>
+                    <span class="nav-icon">🔑</span>
+                    <span class="nav-text">Change Password</span>
+                </li>
+
+                @if (!IsArtist)
+                {
+                    <li class="nav-item @(currentPage == "becomeArtist" ? "active" : "")" @onclick='() => ChangePage("becomeArtist")'>
+                        <span class="nav-icon">🎤</span>
+                        <span class="nav-text">Becoma An Artist</span>
+                    </li>
+                }
+
+
+                <li class="nav-item" @onclick="Logout">
+                    <span class="nav-icon">🚪</span>
+                    <span class="nav-text">Logout</span>
+                </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+
+        <!-- Dynamic Content Based on Selected Page -->
+        <div class="content-body">
+            @if (currentPage == "home")
+            {
+                <div class="home-content">
+                    <h1>Welcome to TuneApp</h1>
+                    <p>Your music journey starts here.</p>
+                    <!-- More home content here -->
+                </div>
+            }
+            else if (currentPage == "personalDetails")
+            {
+                <!-- Personal Details Card -->
+                <div class="settings-card">
+                    <h2><span style="margin-right: 0.5rem;">👤</span>Personal Details</h2>
+                    <div class="form-group">
+                        <label class="form-label"><span style="margin-right: 0.5rem;">📊</span>Account Status</label>
+                        <div style="margin-top: 10px;">
+                            <div style="display: inline-flex; align-items: center; background-color: #f8f8f8; border-radius: 50px; padding: 8px 20px;">
+                                <span style="margin-right: 8px;">🎧</span>
+                                <span style="color: #4169e1; font-weight: 500;">
+                                    @if (IsArtist)
+                                    {
+                                        <span > Artist </span>
+                                    }
+                                    else
+                                    {
+                                        <span> Listener </span>
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label class="form-label"><span style="margin-right: 0.5rem;">📝</span>Full Name</label>
+                            <input type="text" class="form-input" value=@listener.FullName disabled>
+                        </div>
+                        <div class="form-group half">
+                            <label class="form-label"><span style="margin-right: 0.5rem;">🔖</span>Username</label>
+                            <input type="text" class="form-input" value=@listener.UserName disabled>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label"><span style="margin-right: 0.5rem;">📧</span>Email Address</label>
+                        <input type="email" class="form-input" value=@listener.EmailAddress>
+                    </div>
+                </div>
+            }
+            else if (currentPage == "changePassword")
+            {
+                <div class="settings-content">
+                    <h1>Change Password</h1>
+                    <p>Manage your account preferences.</p>
+
+                    <div class="settings-form">
+                       
+                        <div class="form-group">
+                            <label>Current Password</label>
+                            <input @bind="currentPassword" type="password" class="form-input" placeholder="Enter current password">
+                        </div>
+
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input @bind="newPassword" type="password" class="form-input" placeholder="Enter new password">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Confirm New Password</label>
+                            <input @bind="confirmPassword" type="password" class="form-input" placeholder="Confirm new password">
+                        </div>
+
+                        <button @onclick="SaveSettings" class="submit-button">SAVE CHANGES</button>
+
+                        <p class="status-message">@settingsStatusMessage</p>
+                    </div>
+                </div>
+            }
+
+
+
+
+
+            @if (currentPage == "becomeArtist")
+            {
+                <div class="content-body">
+                    <div>
+                        <h1><span style="margin-right: 0.5rem;">🎤</span>Become an Artist</h1>
+
+                        <p style="color: var(--gray); margin-bottom: 1.5rem;">
+                            Want to share your music with the world? Convert your listener account to an artist account.
+                        </p>
+
+                        @if (!showArtistForm)
+                        {
+                            <button @onclick="() => showArtistForm = true" style="background: transparent; color: var(--white); border: 2px solid var(--primary); padding: 0.85rem 1.5rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer;">Become an Artist</button>
+                        }
+                        else
+                        {
+                            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed rgba(255, 255, 255, 0.1);">
+                                <div class="form-group">
+                                    <label class="form-label"><span style="margin-right: 0.5rem;">🎭</span>Stage Name</label>
+                                    <input type="text" class="form-input" @bind="stageName" placeholder="Enter your stage name">
+                                </div>
+
+                                <div class="form-group" style="position: relative;">
+                                    <label class="form-label"><span style="margin-right: 0.5rem;">🎵</span>Music Genre</label>
+                                    <select class="form-input" @bind="selectedGenre" style="width: 100%; padding: 0.85rem 1rem; background-color: #0A0A0A; border: 1px solid #FF4500; border-radius: 6px; color: white; font-size: 1rem; appearance: menulist; cursor: pointer; position: relative; z-index: 10;">
+                                        @foreach (var item in lst_genres)
+                                        {
+                                            <li class="genre-item">
+                                            <option value="@item.Genre">@item.GenreName</option>
+                                            </li>
+                                        }
+                                    </select>
+                                </div>
+
+                                <!-- New Image Upload Section -->
+                                <div class="form-group">
+                                    <label class="form-label"><span style="margin-right: 0.5rem;">🖼️</span>Profile Image</label>
+                                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                                        <InputFile OnChange="OnInputFileChange" accept=".jpg,.jpeg,.png" class="form-input" style="padding: 0.5rem;" />
+
+                                        @if (imagePreview != null)
+                                        {
+                                            <div style="margin-top: 10px;">
+                                                <img src="@imagePreview" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.2);" />
+                                            </div>
+                                        }
+                                        @if (!string.IsNullOrEmpty(imageStatusMessage))
+                                        {
+                                            <div style="color: @(imageStatusMessage.Contains("Error") ? "#e74c3c" : "#2ecc71"); font-size: 0.9rem;">
+                                                @imageStatusMessage
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+
+
+                                <button @onclick="ConvertToArtist" class="submit-button" style="width: 100%; margin-top: 20px; margin-bottom: 10px; background: linear-gradient(135deg, #FF4500 0%, #FF6B00 100%); color: white; border: none; padding: 1rem; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer;">Convert to Artist</button>
+                                <button @onclick="() => showArtistForm = false" style="display: block; margin: 0 auto; background: transparent; border: 1px solid gray; color: gray; padding: 0.5rem 1rem; border-radius: 6px; font-size: 0.9rem; cursor: pointer;">Cancel</button>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(artistStatusMessage))
+                        {
+                            <div class="status-message" style="margin-top: 1rem; padding: 10px; border-radius: 6px; color: @(artistStatusMessage.Contains("Error") ? "#e74c3c" : "#2ecc71");">
+                                @artistStatusMessage
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+
+
+
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    List<Genres> lst_genres = new List<Genres>();
+
+    // User state
+    private Listener listener;
+    private Artist artist;
+    FeedDB feedDB = new FeedDB();
+    SongDB songdb = new SongDB();
+    List<Feed> lstFeed = null;
+
+    private bool IsArtist = false;
+
+    // Navigation state
+    private string currentPage = "home";
+
+
+    // User settings state
+    private string userEmail = "";
+    private string currentPassword = "";
+    private string newPassword = "";
+    private string confirmPassword = "";
+    private string tweetStatusMessage = "";
+    private string settingsStatusMessage = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var result = await MySession.GetAsync<Listener>("ListenerLogin");
+            listener = result.Value;
+
+            if (listener == null)
+            {
+                navigationManager.NavigateTo("/Login");
+                return;
+            }
+
+            var artistResult = await MySession.GetAsync<Artist>("ArtistLogin");
+            artist = artistResult.Value;
+            Console.WriteLine("artisit logged is:", artist);
+
+            // Pre-fill user email if available
+            userEmail = listener?.EmailAddress ?? "";
+
+            GenresDB genresDB = new GenresDB();
+            lst_genres = await genresDB.selectAllAsync();
+        }
+        catch (Exception)
+        {
+            navigationManager.NavigateTo("/Login");
+        }
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
+            var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
+            if (listener1.Success && artist1.Success)
+            {
+                artist = artist1.Value;
+                artist.UserName = listener1.Value.UserName;
+                listener = listener1.Value;
+                IsArtist = true;
+
+                StateHasChanged();
+            }
+            else if (listener1.Success)
+            {
+                listener = listener1.Value;
+                StateHasChanged();
+            }
+            else
+                navigationManager.NavigateTo("Login");
+
+        }
+
+    }
+
+    private void ChangePage(string page)
+    {
+        currentPage = page;
+        // Reset status messages when changing pages
+    }
+
+    private async Task Logout()
+    {
+        await MySession.DeleteAsync("ListenerLogin");
+        await MySession.DeleteAsync("ArtistLogin");
+        navigationManager.NavigateTo("/Login");
+    }
+
+    // Section to upload image of new artist
+    // Add these variables to your existing variables in the @code block
+    private byte[] profileImageData = null;
+    private string imagePreview = null;
+    private string imageStatusMessage = "";
+    private long maxFileSize = 1024 * 1024 * 5; // 5MB
+
+    private async Task OnInputFileChange(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            // Clear previous data
+            profileImageData = null;
+            imagePreview = null;
+            imageStatusMessage = "";
+
+            var file = e.File;
+
+            // Check if file is selected
+            if (file == null)
+            {
+                imageStatusMessage = "Error: No file selected";
+                return;
+            }
+
+            // Check file size
+            if (file.Size > maxFileSize)
+            {
+                imageStatusMessage = "Error: File is too large (max 5MB)";
+                return;
+            }
+
+            // Check file type
+            if (!file.ContentType.Contains("image/"))
+            {
+                imageStatusMessage = "Error: Only image files are allowed";
+                return;
+            }
+
+            // Create a memory stream to store the file
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.OpenReadStream(maxFileSize).CopyToAsync(memoryStream);
+
+                // Convert to byte array
+                profileImageData = memoryStream.ToArray();
+
+                // Create a base64 string for preview
+                var base64 = Convert.ToBase64String(profileImageData);
+                imagePreview = $"data:{file.ContentType};base64,{base64}";
+
+                imageStatusMessage = "Image uploaded successfully";
+            }
+        }
+        catch (Exception ex)
+        {
+            imageStatusMessage = $"Error: {ex.Message}";
+            await js.InvokeVoidAsync("console.error", ex.ToString());
+        }
+    }
+
+
+
+    // Artist conversion state
+    private bool showArtistForm = false;
+    private string stageName = "";
+    private int selectedGenre = 0;
+    private string artistStatusMessage = "";
+
+    private async Task ConvertToArtist()
+    {
+        // Input validation
+        if (string.IsNullOrWhiteSpace(stageName))
+        {
+            artistStatusMessage = "Stage name cannot be empty.";
+            return;
+        }
+
+        if (selectedGenre == 0)
+        {
+            artistStatusMessage = "Please select a genre.";
+            return;
+        }
+
+        if (profileImageData == null || profileImageData.Length == 0)
+        {
+            artistStatusMessage = "Please upload a profile image.";
+            return;
+        }
+
+        try
+        {
+            // Create artist from listener
+            if (listener != null)
+            {
+                var artist = new Artist(listener.UserID, stageName, 0, selectedGenre, profileImageData);
+
+                ArtistDB arDb = new ArtistDB();
+                var new_artist = await arDb.InsertGetObjAsync(artist);
+
+                artistStatusMessage = "Successfully converted to artist account!";
+
+                // Update session with artist info
+                await MySession.SetAsync("ArtistLogin", new_artist);
+
+                // Reset form
+                showArtistForm = false;
+                stageName = "";
+                selectedGenre = 0;
+                profileImageData = null;
+                imagePreview = null;
+            }
+            else
+            {
+                artistStatusMessage = "Error: User not logged in.";
+            }
+        }
+        catch (Exception ex)
+        {
+            artistStatusMessage = $"Error: {ex.Message}";
+            await js.InvokeVoidAsync("console.error", ex.ToString());
+        }
+    }
+
+
+
+    // User settings methods
+    private async Task SaveSettings()
+    {
+        // Input validation
+        if (string.IsNullOrWhiteSpace(userEmail))
+        {
+            settingsStatusMessage = "Email cannot be empty.";
+            return;
+        }
+
+        if (!string.IsNullOrWhiteSpace(newPassword))
+        {
+            if (string.IsNullOrWhiteSpace(currentPassword))
+            {
+                settingsStatusMessage = "Current password is required to set a new password.";
+                return;
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                settingsStatusMessage = "New password and confirmation do not match.";
+                return;
+            }
+
+            if (currentPassword != listener.PasswordHash)
+            {
+                settingsStatusMessage = "Current password is incorrect.";
+                return;
+            }
+        }
+
+        try
+        {
+            // Update password
+            if (!string.IsNullOrWhiteSpace(newPassword))
+            {
+                ListenerDB lst = new ListenerDB();
+                listener.PasswordHash = newPassword;
+                await lst.ResetPassAsync(listener);
+
+
+                currentPassword = "";
+                newPassword = "";
+                confirmPassword = "";
+            }
+
+            settingsStatusMessage = "Settings updated successfully!";
+
+            // Update session with new listener data
+            await MySession.SetAsync("ListenerLogin", listener);
+        }
+        catch (Exception ex)
+        {
+            settingsStatusMessage = $"Error: {ex.Message}";
+            await js.InvokeVoidAsync("console.error", ex.ToString());
+        }
+    }
+}
