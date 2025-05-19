@@ -23,13 +23,12 @@ namespace DBL
             {
                 A.ArtistID = int.Parse(row[0].ToString());
                 A.StageName = row[1].ToString();
-                A.FollowersNumber = int.Parse(row[2].ToString());
-                A.GenreID = int.Parse(row[3].ToString());
+                A.GenreID = int.Parse(row[2].ToString());
                 // null = invalid memory reference.
                 // DBNull = invalid reference to DB entry. DBNull.Value != null (DBNull.Value isn't an invalid memory reference)
-                if (row[4] != DBNull.Value)
+                if (row[3] != DBNull.Value)
                 {
-                    A.ProfileImage = (byte[])row[4];
+                    A.ProfileImage = (byte[])row[3];
                 }
                 else
                 {
@@ -76,8 +75,7 @@ namespace DBL
                 {"artistId", artist.ArtistID },
                 {"stageName", artist.StageName },
                 {"genreId", artist.GenreID },
-                {"profileImage" , artist.ProfileImage},
-                {"followersNumber", 0 }
+                {"profileImage" , artist.ProfileImage}
             };
             return (Artist)await base.InsertGetObjAsync(fillValues);
         }
@@ -96,7 +94,6 @@ namespace DBL
             Dictionary<string, object> fillValues = new Dictionary<string, object>();
             Dictionary<string, object> filterValues = new Dictionary<string, object>();
             fillValues.Add("stageName", artist.StageName);
-            fillValues.Add("followersNumber", artist.FollowersNumber);
             fillValues.Add("genreID", artist.GenreID);
             fillValues.Add ("profileImage" , artist.ProfileImage);
 

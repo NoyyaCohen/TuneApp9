@@ -406,7 +406,7 @@
             // Create artist from listener
             if (listener != null)
             {
-                var artist = new Artist(listener.UserID, stageName, 0, selectedGenre, profileImageData);
+                var artist = new Artist(listener.UserID, stageName, selectedGenre, profileImageData);
 
                 ArtistDB arDb = new ArtistDB();
                 var new_artist = await arDb.InsertGetObjAsync(artist);

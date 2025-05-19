@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Models
+﻿namespace Models
 {
     public class Events
     {
@@ -12,11 +6,11 @@ namespace Models
         private DateTime date;
         private string artistName;
         private string place;
-        private string image;
+        private byte[] image;
 
         public Events() { }
 
-        public Events(int eventID, DateTime date, string artistName, string place, string image)
+        public Events(int eventID, DateTime date, string artistName, string place, byte[] image)
         {
             this.EventID = eventID;
             this.Date = date;
@@ -29,7 +23,6 @@ namespace Models
         public DateTime Date { get => date; set => date = value; }
         public string ArtistName { get => artistName; set => artistName = value; }
         public string Place { get => place; set => place = value; }
-        public string Image { get => image; set => image = value; }
+        public byte[] Image { get => image; set => image = value; }
     }
 }
-

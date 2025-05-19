@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="DBL.ArtistDB">
+    <Position X="4.75" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIEAAQAAEAAAAAAQAAAAAAAAAAAAAAgAAAEEEEAAAIA=</HashCode>
+      <FileName>ArtistDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.BaseDB&lt;T&gt;">
+    <Position X="12.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAABARGQEAAAAwAAAAAAAAQAAAAEgCAAEEAAAAAIA=</HashCode>
+      <FileName>BaseDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.DB">
+    <Position X="12.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAAAAAAAAAQAAAAAAAAAAAAQgAA=</HashCode>
+      <FileName>DB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.FeedDB">
+    <Position X="7" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>gIEAAQAAEAAAAAAQAAAAAAAAAAAAAAAAAAEEAAAAAIA=</HashCode>
+      <FileName>FeedDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.GenresDB">
+    <Position X="11.75" Y="8" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAQAAAEAAAAAQAAAAAAAAAAAAAAAAAEEEAAAAAAA=</HashCode>
+      <FileName>GenresDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.ListenerDB">
+    <Position X="17" Y="8" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>goEAAQAAEgAAAAAQAACAEAAAAAAAAAgIAAEEAAIAAIA=</HashCode>
+      <FileName>ListenerDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.SongDB">
+    <Position X="9.25" Y="8" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIEAAQAAEAAAAAAQAAAAABAAEAAAAEAAAAEUAAgAAIA=</HashCode>
+      <FileName>SongDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.UserArtistFollowsDB">
+    <Position X="14.5" Y="8" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAQAAAAAgACAAAAAAAAAAEEAAAAIAA=</HashCode>
+      <FileName>UserArtistFollowsDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="DBL.UserGenreDB">
+    <Position X="19.5" Y="8" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AIAAAQAAEAAAAAAQAAAAAAAAAAAAAAAAAAEEAAAAAIA=</HashCode>
+      <FileName>UserGenreDB.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

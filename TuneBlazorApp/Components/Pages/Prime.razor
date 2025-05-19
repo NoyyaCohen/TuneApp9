@@ -487,19 +487,18 @@
                     {
                         <div class="song-card" onclick="changeMusicFile(event)">
                             <div class="song-thumbnail">
-                                @* @if(!= null)
+
+                                @if (artistData.ContainsKey(song.ArtistID) && artistData[song.ArtistID].ProfileImage != null)
                                 {
-                                    <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String((await artistDB.GetArtistBySongAsync(song.ArtistID)).ProfileImage)" />
-                                }
-                                @if (song != null)
-                                {
-                                    <img class="artist-image" src="data:image;base64, @System.Convert.ToBase64String(song.)" />
+                                    <img class="artist-image" src="data:image/jpeg;base64,@System.Convert.ToBase64String(artistData[song.ArtistID].ProfileImage)" />
                                 }
                                 else
                                 {
-                                    <img class="artist-image" src="data:image;base64, @System.Convert.FromBase64String("CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");" />
-                                } *@
-                                <img src="/api/placeholder/300/300" alt="Song Cover">
+                                    <img src="/api/placeholder/300/300" alt="Song Cover">
+                                }
+
+                                 
+                                @* <img src="/api/placeholder/300/300" alt="Song Cover"> *@
                                 <div class="song-play">▶</div>
                             </div>
                             <div class="song-info">
@@ -533,7 +532,14 @@
                     {
                         <div class="song-card" onclick="changeMusicFile(event)">
                             <div class="song-thumbnail">
-                                <img src="/api/placeholder/300/300" alt="Song Cover">
+                                @if (artistData.ContainsKey(song.ArtistID) && artistData[song.ArtistID].ProfileImage != null)
+                                {
+                                    <img class="artist-image" src="data:image/jpeg;base64,@System.Convert.ToBase64String(artistData[song.ArtistID].ProfileImage)" />
+                                }
+                                else
+                                {
+                                    <img src="/api/placeholder/300/300" alt="Song Cover">
+                                }
                                 <div class="song-play">▶</div>
                             </div>
                             <div class="song-info">
@@ -547,6 +553,63 @@
                 }
             </div>
 
+        </section>
+
+        <!-- Artists Shows -->
+        <section class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <svg class="section-icon" viewBox="0 0 24 24">
+                        <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" class="svg-icon"></path>
+                    </svg>
+                    Artists Shows
+                </h2>
+                <a href="#" class="see-all">See All</a>
+            </div>
+
+            <div class="shows-container" role="region" aria-label="Artist shows carousel">
+                <!-- Show Card 1 -->
+                @if (lst != null)
+                {
+                    @foreach (Events e in lst)
+                    {
+                        <div class="show-card">
+                            
+                                <div class="show-image">
+                                    @if (e.Image != null && e.Image.Length > 0)
+                                    {
+                                        <img src="data:image/jpeg;base64,@System.Convert.ToBase64String(e.Image)" alt="@e.ArtistName concert">
+                                    }
+                                    else
+                                    {
+                                        <img src="/api/placeholder/300/200" alt="@e.ArtistName concert">
+                                    }
+                                    <div class="show-date-overlay">@e.Date.ToString()</div>
+                                </div>
+                           
+                            <div class="show-info">
+                                <div class="show-artist-name">@e.ArtistName</div>
+                                <div class="show-place">
+                                    <svg class="location-icon" viewBox="0 0 24 24">
+                                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
+                                    </svg>
+                                    @e.Place
+                                </div>
+                                <button class="ticket-button" @onclick="()=> sendAPI(e.EventID)">Tickets</button>
+                            </div>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>loaading</p>
+                }
+
+
+
+
+
+            </div>
         </section>
 
         <!-- Messages from Artists -->
@@ -570,7 +633,18 @@
                         <div class="message-card">
                             <div class="message-header">
                                 <div class="message-avatar">
-                                    <img src="/api/placeholder/100/100" alt="Artist Avatar">
+
+
+                                    @if (artistData.ContainsKey(message.ArtistPosterID) && artistData[message.ArtistPosterID].ProfileImage != null)
+                                    {
+                                        <img class="artist-image" src="data:image/jpeg;base64,@System.Convert.ToBase64String(artistData[message.ArtistPosterID].ProfileImage)" />
+                                    }
+                                    else
+                                    {
+                                        <img src="/api/placeholder/100/100" alt="Song Cover">
+                                    }
+
+                                    
                                 </div>
                                 <div class="message-sender">
                                     <div class="sender-name">
@@ -595,106 +669,10 @@
                         </div>
                     }
                 }
-
-                @* <!-- Message 2 -->
-                <div class="message-card">
-                <div class="message-header">
-                <div class="message-avatar">
-                <img src="/api/placeholder/100/100" alt="Artist Avatar">
-                </div>
-                <div class="message-sender">
-                <div class="sender-name">
-                Jack Blaze
-                <svg class="verified-badge" viewBox="0 0 24 24">
-                <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
-                </svg>
-                </div>
-                <div class="message-time">Yesterday, 3:45 PM</div>
-                </div>
-                </div>
-                <div class="message-content">
-                Announcing my summer tour dates! I'll be hitting 15 cities across the country. Pre-sale tickets available tomorrow for my followers. Use code BLAZEFAN for 15% off!
-                </div>
-                <div class="message-actions">
-                <button class="message-button">Reply</button>
-                <button class="message-button primary">Get Tickets</button>
-                </div>
-                </div> *@
-
-                @* <!-- Message 3 -->
-                <div class="message-card">
-                <div class="message-header">
-                <div class="message-avatar">
-                <img src="/api/placeholder/100/100" alt="Artist Avatar">
-                </div>
-                <div class="message-sender">
-                <div class="sender-name">
-                Ember Twins
-                <svg class="verified-badge" viewBox="0 0 24 24">
-                <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z" fill="#1DA1F2"></path>
-                </svg>
-                </div>
-                <div class="message-time">Yesterday, 11:20 AM</div>
-                </div>
-                </div>
-                <div class="message-content">
-                We're going live on Instagram tomorrow at 8 PM to talk about our new album and answer your questions! Set a reminder and join us for some exclusive news! 🔥🎵
-                </div>
-                <div class="message-actions">
-                <button class="message-button">Reply</button>
-                <button class="message-button primary">Set Reminder</button>
-                </div>
-                </div> *@
             </div>
         </section>
     </div>
-    <!-- Artists Shows -->
-    <section class="section">
-        <div class="section-header">
-            <h2 class="section-title">
-                <svg class="section-icon" viewBox="0 0 24 24">
-                    <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z" class="svg-icon"></path>
-                </svg>
-                Artists Shows
-            </h2>
-            <a href="#" class="see-all">See All</a>
-        </div>
-
-        <div class="shows-container" role="region" aria-label="Artist shows carousel">
-            <!-- Show Card 1 -->
-            @if (lst != null)
-            {
-                @foreach (Events e in lst)
-                {
-                    <div class="show-card">
-                        <div class="show-image">
-                            <img src="/api/placeholder/300/200" alt="Sophie Flame show">
-                            <div class="show-date-overlay">@e.Date.ToString()</div>
-                        </div>
-                        <div class="show-info">
-                            <div class="show-artist-name">@e.ArtistName</div>
-                            <div class="show-place">
-                                <svg class="location-icon" viewBox="0 0 24 24">
-                                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" />
-                                </svg>
-                                @e.Place
-                            </div>
-                            <button class="ticket-button">Tickets</button>
-                        </div>
-                    </div>
-                }
-            }
-            else
-            {
-                <p>loaading</p>
-            }
-
-
-
-
-
-        </div>
-    </section>
+    
     <!-- Now Playing Bar -->
     <div class="now-playing">
         <div class="playing-song-info">
@@ -727,12 +705,12 @@
             </div>
 
             <div class="progress-container">
-                <div class="time">1:23</div>
+                <div class="time">--:--</div>
                 <div class="progress-bar">
                     <div class="progress-fill"></div>
                     <div class="progress-handle"></div>
                 </div>
-                <div class="time">3:45</div>
+                <div class="time">--:--</div>
             </div>
         </div>
 
@@ -756,9 +734,9 @@
 
 @code {
     // private Listener listener = new Listener();
-    private List<Song> songs = new List<Song>();
-    private List<Song> songsByGenre = new List<Song>();
-    private List<Song> songsByFollowedArtists = new List<Song>();
+    private List<Song> songs;
+    private List<Song> songsByGenre;
+    private List<Song> songsByFollowedArtists;
     Song s = new Song();
     private Dictionary<int, string> sName = new Dictionary<int, string>();
     private Dictionary<int, string> mName = new Dictionary<int, string>();
@@ -768,6 +746,11 @@
     SongDB songDB = new SongDB();
     ArtistDB artistDB = new ArtistDB();
 
+    Fans fan = new Fans();
+
+    //for pictures
+    private Dictionary<int, Artist> artistData = new Dictionary<int, Artist>();
+
 
     private Song song = new Song();
 
@@ -776,11 +759,18 @@
 
     private Listener listener;
     private Artist artist;
+    private byte[] photo;
     private bool IsArtist = false;
 
     string ResultStr = " Loading... ";
 
     private List<Events> lst;
+
+    public async Task GetArtist()
+    {
+        ArtistDB artistDB = new ArtistDB();
+        artist = await artistDB.GetArtistBySongAsync(song.ArtistID);
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -800,13 +790,14 @@
                 songs = await songDB.selectAllAsync();
                 sName = new Dictionary<int, string>();
                 mName = new Dictionary<int, string>();
-                
+
                 foreach (Song song in songs)
                 {
                     Artist a = await artistDB.GetArtistByID(song.ArtistID);
                     if (!sName.ContainsKey(song.ArtistID))
                     {
                         sName.Add(song.ArtistID, a.StageName);
+                        artistData.Add(song.ArtistID, a);
                     }
                 }
 
@@ -828,7 +819,27 @@
     }
 
 
+    private async Task sendAPI(int idShow)
+    {
+        try
+        {
+            HttpClient httpClient = new HttpClient();
+            fan.EventID = idShow;
+            fan.UserName = listener.UserName;
+            fan.Email = listener.EmailAddress;
+            string url = "https://mc62mt86-7131.euw.devtunnels.ms/api/Shows";
+            var aaa = await httpClient.PostAsJsonAsync(url, fan);
 
+            if(aaa.IsSuccessStatusCode)
+            {
+                var s = await aaa.Content.ReadAsStringAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ResultStr = ex.Message;
+        }
+    }
 
     protected override async Task OnInitializedAsync()
     {
@@ -854,6 +865,7 @@
                 mName.Add(m.ArtistPosterID, a.StageName);
             }
         }
+
 
 
         /* var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
