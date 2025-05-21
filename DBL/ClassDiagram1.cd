@@ -24,7 +24,7 @@
   <Class Name="DBL.FeedDB">
     <Position X="7" Y="8" Width="2" />
     <TypeIdentifier>
-      <HashCode>gIEAAQAAEAAAAAAQAAAAAAAAAAAAAAAAAAEEAAAAAIA=</HashCode>
+      <HashCode>gIEAAQAAEAAAAAAQAAAAAAEAAAAAAAAAAAEEAAAAAIA=</HashCode>
       <FileName>FeedDB.cs</FileName>
     </TypeIdentifier>
   </Class>

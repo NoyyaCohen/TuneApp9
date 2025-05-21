@@ -67,15 +67,15 @@ namespace DBL
                 return null;
         }
 
-        public async Task<Listener> InsertGetObjAsync(Listener listener, string password)
+        public async Task<Listener> InsertGetObjAsync(Listener listener, string hashedPassword)
         {
             Dictionary<string, object> fillValues = new Dictionary<string, object>()
-            {
-                { "fullName", listener.FullName },
-                { "userName", listener.UserName },
-                { "emailAddress", listener.EmailAddress },
-                { "passwordHash", listener.PasswordHash }
-            };
+    {
+                  { "fullName", listener.FullName },
+                  { "userName", listener.UserName },
+                  { "emailAddress", listener.EmailAddress },
+                  { "passwordHash", listener.PasswordHash } 
+             };
             return (Listener)await base.InsertGetObjAsync(fillValues);
         }
 
@@ -109,15 +109,13 @@ namespace DBL
             return await base.UpdateAsync(fillValues, filterValues);
         }
 
-        public async Task<Listener> LoginAsync(string name, string password)
+        public async Task<Listener> LoginAsync(string name, string hashedPassword)
         {
             string sql = @"SELECT * FROM tuneapp.users where userName = @name and passwordHash=@pass;";
             Dictionary<string, object> p = new Dictionary<string, object>();
             p.Add("name", name);
-            p.Add("pass", password);
+            p.Add("pass", hashedPassword); // עכשיו אנחנו מקבלים את הסיסמה המוצפנת
             List<Listener> list = await SelectAllAsync(sql, p);
-
-            //If the query found exactly one user matching the username and password, return that user; otherwise, return null
 
             if (list.Count == 1)
                 return list[0];

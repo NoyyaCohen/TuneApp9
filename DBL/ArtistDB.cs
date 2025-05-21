@@ -114,20 +114,5 @@ namespace DBL
             return artist;
         }
 
-        //public async Task<byte[]> ArtistPhoto(int id)
-        //{
-        //    Dictionary<string, object> p = new Dictionary<string, object>();
-        //    p.Add("artistID", id);
-        //    List<Artist> lst = (List<Artist>)await SelectAllAsync(p);
-        //    if (lst.Count == 1 && lst[0].ProfileImage != null)
-        //    {
-        //        return lst[0].ProfileImage;
-        //    }
-        //    else
-        //        return Convert.FromBase64String(
-        //            "CjxzdmcgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiPgogIDwhLS0gQmFja2dyb3VuZCBjaXJjbGUgLS0+CiAgPGNpcmNsZSBjeD0iMTAwIiBjeT0iMTAwIiByPSI5NSIgZmlsbD0iIzFFMUUxRSIgc3Ryb2tlPSIjRkY0NTAwIiBzdHJva2Utd2lkdGg9IjIiLz4KICAKICA8IS0tIEFydGlzdCBzaWxob3VldHRlIC0gc2ltcGxlIHBlcnNvbiB3aXRoIGhlYWRwaG9uZXMgLS0+CiAgPGcgZmlsbD0iI0ZGNDUwMCI+CiAgICA8IS0tIEhlYWQgLS0+CiAgICA8Y2lyY2xlIGN4PSIxMDAiIGN5PSI4MCIgcj0iMzUiLz4KICAgIAogICAgPCEtLSBIZWFkcGhvbmVzIC0tPgogICAgPHBhdGggZD0iTTYwIDgwIEM2MCA2MCwgNzAgNDUsIDEwMCA0NSBDMTMwIDQ1LCAxNDAgNjAsIDE0MCA4MCIgc3Ryb2tlPSIjMUUxRTFFIiBzdHJva2Utd2lkdGg9IjUiIGZpbGw9Im5vbmUiLz4KICAgIDxyZWN0IHg9IjU1IiB5PSI3NSIgd2lkdGg9IjEwIiBoZWlnaHQ9IjI1IiByeD0iNSIgcnk9IjUiLz4KICAgIDxyZWN0IHg9IjEzNSIgeT0iNzUiIHdpZHRoPSIxMCIgaGVpZ2h0PSIyNSIgcng9IjUiIHJ5PSI1Ii8+CiAgICAKICAgIDwhLS0gQm9keSAtLT4KICAgIDxwYXRoIGQ9Ik03MCAxMjAgQzcwIDEwNSwgODUgMTA1LCAxMDAgMTA1IEMxMTUgMTA1LCAxMzAgMTA1LCAxMzAgMTIwIEwxMzAgMTU1IEMxMzAgMTY1LCAxMTUgMTY1LCAxMDAgMTY1IEM4NSAxNjUsIDcwIDE2NSwgNzAgMTU1IFoiLz4KICA8L2c+Cjwvc3ZnPgo=");
-        //}
-
-
     }
 }

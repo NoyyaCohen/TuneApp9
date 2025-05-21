@@ -69,14 +69,10 @@
                         <input @bind-value="passwordHash" class="form-input" type="password" id="password" name="passwordHash" placeholder="Enter your password" required>
                     </div>
                     
-                   @*  <div class="remember-me">
-                        <input type="checkbox" id="remember" name="remember">
-                        <label for="remember">Remember me</label>
-                    </div> *@
                     
-                    <div class="forgot-password">
+                    @* <div class="forgot-password">
                         <a href="#">Forgot password?</a>
-                    </div>
+                    </div> *@
 
             <p style="color:orange; ">@msg</p>
 
@@ -100,9 +96,10 @@
 
     async Task DoLogin()
     {
+        string hashedPassword = StringHasher.GetSHA256Hash(passwordHash);
 
         ListenerDB listenerDB = new ListenerDB();
-        Listener l = await listenerDB.LoginAsync(userName, passwordHash);//
+        Listener l = await listenerDB.LoginAsync(userName, hashedPassword);
 
         if (l != null)
         {

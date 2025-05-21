@@ -34,7 +34,7 @@ namespace DBL
         }
         protected override string GetPrimaryKeyName()
         {
-            return "postID";
+            return "postId";
         }
 
         protected override string GetTableName()
@@ -49,12 +49,32 @@ namespace DBL
         public async Task<Feed> GetListenerByID(long id)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters["messageID"] = id;
+            parameters["postId"] = id;
             List<Feed> ArtistDTOs = await base.SelectAllAsync(parameters);
             if (ArtistDTOs != null && ArtistDTOs.Count == 1)
                 return ArtistDTOs[0];
             else
                 return null;
+        }
+
+        public async Task<List<Feed>> GetFeedByFollowedArtistsAsync(int userId)
+        {
+            string sql = $@"select
+                     artists_posts.PostId,
+                     artists_posts.Title,
+                     artists_posts.Message,
+                     artists_posts.ArtistPosterID,
+                     artists_posts.PostDate
+                 from artists_posts inner join artists
+                     on artists_posts.ArtistPosterID = artists.artistId
+                 where artists.artistId in
+                 (select artistID from user_artist_follows where userID = @userId)
+                 order by artists_posts.PostDate desc";
+
+            Dictionary<string, object> p = new Dictionary<string, object>();
+            p.Add("userId", userId);
+            List<Feed> list = await SelectAllAsync(sql, p);
+            return list;
         }
 
         public async Task<Feed> InsertGetObjAsync(Feed feed)
@@ -74,19 +94,9 @@ namespace DBL
         }
         public async Task<int> DeleteAsync(Feed feed)
         {
-            Dictionary<string, object> filterValues = new Dictionary<string, object> { { "messageID", feed.PostID } };
+            Dictionary<string, object> filterValues = new Dictionary<string, object> { { "postId", feed.PostID } };
             return await base.DeleteAsync(filterValues);
         }
-        //public async Task<int> UpdateAsync(Listener listener)
-        //{
-        //    Dictionary<string, object> fillValues = new Dictionary<string, object>();
-        //    Dictionary<string, object> filterValues = new Dictionary<string, object>();
-        //    fillValues.Add("fullName", listener.FullName);
-        //    fillValues.Add("userName", listener.UserName);
-        //    fillValues.Add("emailAdress", listener.EmailAdress);
-        //    filterValues.Add("phoneNumber", listener.PhoneNumber);
-        //    return await base.UpdateAsync(fillValues, filterValues);
-        //}
     }
 }
 

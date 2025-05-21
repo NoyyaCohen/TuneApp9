@@ -27,11 +27,11 @@
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">✓</div>
-                    <div class="feature-text">Create unlimited playlists</div>
+                    <div class="feature-text">Listen to songs by your prefrences</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">✓</div>
-                    <div class="feature-text">Connect with other music lovers</div>
+                    <div class="feature-text">Find the artists you love</div>
                 </div>
                 <div class="feature-item">
                     <div class="feature-icon">✓</div>
@@ -161,7 +161,7 @@
         listener.FullName = fullName;
         listener.UserName = userName;
         listener.EmailAddress = emailAddress;
-        listener.PasswordHash = password;//
+        listener.PasswordHash = StringHasher.GetSHA256Hash(password);
 
 
         bool isValid = await ValidateCredentials();

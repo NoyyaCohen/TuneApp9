@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Models.Artist">
+    <Position X="7.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAIAIAACAAAAABAAAAAAAAgAAAAIABAAAAA=</HashCode>
+      <FileName>Artist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Events">
+    <Position X="2" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAgAAgAAAAAAAAAAAAAAAAEAAAQBCBAEAAAQAAAAA=</HashCode>
+      <FileName>Events.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Fans">
+    <Position X="13" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAgACAAAAAgAAAAAAAAQAAAAAAAAQAAAAEAQAA=</HashCode>
+      <FileName>Fans.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Feed" BaseTypeListCollapsed="true">
+    <Position X="9.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAFUAAAAVAAAABAAAAAAAAAAAIAAAACA=</HashCode>
+      <FileName>Feed.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="Models.Genres">
+    <Position X="3.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIAAAACAAAAAAAAAAAAAgAAAAI=</HashCode>
+      <FileName>Genres.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Listener">
+    <Position X="5.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAIAACACAAAgAAAAAAAACAQAAAgEAgAA=</HashCode>
+      <FileName>Listener.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.Song">
+    <Position X="11.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACAAAAAAAAABAAAAAQAAABAAAAAAAAAAAAAAgBAgAIA=</HashCode>
+      <FileName>Song.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.UserArtistFollow">
+    <Position X="16.5" Y="2.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAABAAAAA=</HashCode>
+      <FileName>UserArtistFollow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Models.UserGenre">
+    <Position X="14.75" Y="2" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAAAAIAAACAAAAAgAAAAAAACAAAAAgAAAAAA=</HashCode>
+      <FileName>UserGenre.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
