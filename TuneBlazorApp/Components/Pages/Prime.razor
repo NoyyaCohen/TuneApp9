@@ -319,7 +319,7 @@
 
         const audio = document.getElementById("audio-player");
         audio.src = newSrc; // set new source
-        audio.preload = "auto"; //על מנת שהשיר יטען מהק יותר
+        // audio.preload = "auto"; //על מנת שהשיר יטען מהק יותר
         audio.load();
         playSong();
     }
@@ -775,6 +775,7 @@
     private List<Song> songs;
     private List<Song> songsByGenre;
     private List<Song> songsByFollowedArtists;
+    private List<Artist> artists;
     Song s = new Song();
     private Dictionary<int, string> sName = new Dictionary<int, string>();
     private Dictionary<int, string> mName = new Dictionary<int, string>();
@@ -816,17 +817,19 @@
         {
             var listener1 = await MySession.GetAsync<Listener>("ListenerLogin");
             var artist1 = await MySession.GetAsync<Artist>("ArtistLogin");
-            if (listener1.Success && artist1.Success)
+            if (listener1.Success)
             {
-                artist = artist1.Value;
-                artist.UserName = listener1.Value.UserName;
                 listener = listener1.Value;
-                IsArtist = true;
+                if (artist1.Success)
+                {
+                    artist = artist1.Value;
+                    artist.UserName = listener1.Value.UserName;
+                    IsArtist = true;
+                }
 
-
-                ///
-                songs = await songDB.selectAllAsync();               
-
+                // Get feed data
+                feedDB = new FeedDB();
+                lstFeed = await feedDB.GetFeedByFollowedArtistsAsync(listener.UserID) ?? new List<Feed>();
 
                 ArtistDB artistDB = new ArtistDB();
                 if (lstFeed != null)
@@ -841,24 +844,25 @@
                     }
                 }
 
+                songs = await songDB.selectAllAsync();
                 foreach (Song song in songs)
                 {
                     Artist a = await artistDB.GetArtistByID(song.ArtistID);
                     if (!sName.ContainsKey(song.ArtistID))
                     {
                         sName.Add(song.ArtistID, a.StageName);
-                        artistData.Add(song.ArtistID, a);
                     }
+                }
+
+                artists = await artistDB.selectAllAsync();
+                foreach(Artist artist in artists)
+                {
+                    artistData.Add(artist.ArtistID, artist);
                 }
 
                 songsByGenre = await songDB.GetAllSongByGenreAsync(listener.UserID);
                 songsByFollowedArtists = await songDB.GetAllSongsByFollowedArtists(listener.UserID);
 
-                StateHasChanged();
-            }
-            else if (listener1.Success)
-            {
-                listener = listener1.Value;
                 StateHasChanged();
             }
             else
@@ -969,10 +973,6 @@
     {
         try
         {
-            // Get feed data
-            feedDB = new FeedDB();
-            lstFeed = await feedDB.GetAllAsync() ?? new List<Feed>();
-
             //await GetTickets();
         }
         catch (Exception ex)

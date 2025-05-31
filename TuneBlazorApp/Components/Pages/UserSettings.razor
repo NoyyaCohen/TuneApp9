@@ -16,7 +16,7 @@
     <!-- Left Sidebar - Navigation Menu -->
     <div class="sidebar">
         <div class="logo-container">
-            <div class="app-logo">TuneApp - Manager</div>
+            <div class="app-logo">TuneApp - UserSettings</div>
         </div>
 
         <nav class="main-nav">
@@ -34,10 +34,10 @@
                     <span class="nav-text">Change Password</span>
                 </li>
 
-                <li class="nav-item @(currentPage == "myShows" ? "active" : "")" @onclick='() => ChangePage("myShows")'>
+               @*  <li class="nav-item @(currentPage == "myShows" ? "active" : "")" @onclick='() => ChangePage("myShows")'>
                     <span class="nav-icon">🎟️</span>
                     <span class="nav-text">My Shows</span>
-                </li>
+                </li> *@
 
                 @if (!IsArtist)
                 {
@@ -140,7 +140,7 @@
             }
 
 
-            @if (currentPage == "myShows")
+            @* @if (currentPage == "myShows")
             {
                 <div class="settings-card">
                     <h2><span style="margin-right: 0.5rem;">🎟️</span>My Shows</h2>
@@ -204,7 +204,7 @@
                         </div>
                     }
                 </div>
-            }
+            } *@
 
 
             @if (currentPage == "becomeArtist")
@@ -341,10 +341,10 @@
             navigationManager.NavigateTo("/Login");
         }
 
-        if (listener != null)
-        {
-            await GetMyShows();
-        }
+        // if (listener != null)
+        // {
+        //     await GetMyShows();
+        // }
 
     }
 
@@ -389,20 +389,20 @@
         await MySession.DeleteAsync("ArtistLogin");
         navigationManager.NavigateTo("/Login");
     }
-    private async Task GetMyShows()
-    {
-        try
-        {
-            HttpClient httpClient = new HttpClient();
-            string url = $"https://mc62mt86-7131.euw.devtunnels.ms/api/Shows/user/{listener.UserName}";
-            myShows = await httpClient.GetFromJsonAsync<List<Events>>(url);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error fetching shows: {ex.Message}");
-            // You could set a status message here if you want
-        }
-    }
+    // private async Task GetMyShows()
+    // {
+    //     try
+    //     {
+    //         HttpClient httpClient = new HttpClient();
+    //         string url = $"https://mc62mt86-7131.euw.devtunnels.ms/api/Shows/user/{listener.UserName}";
+    //         myShows = await httpClient.GetFromJsonAsync<List<Events>>(url);
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         Console.WriteLine($"Error fetching shows: {ex.Message}");
+    //         // You could set a status message here if you want
+    //     }
+    // }
     // Section to upload image of new artist
     // Add these variables to your existing variables in the @code block
     private byte[] profileImageData = null;

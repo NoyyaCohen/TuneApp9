@@ -44,7 +44,7 @@ else
             try
             {
                 HttpClient httpClient = new HttpClient();
-                string url = "https://33dzsc0b-7131.euw.devtunnels.ms/api/Shows";
+                string url = "https://localhost:7131/api/Shows";
                 lst = await httpClient.GetFromJsonAsync<List<Events>>(url);
             }
             catch (Exception ex)

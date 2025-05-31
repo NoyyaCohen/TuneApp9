@@ -496,7 +496,7 @@ body {
     flex: 1;
 }
 
-.sender-name {
+.sender-mName {
     font-weight: 600;
     font-size: 14px;
     display: flex;
